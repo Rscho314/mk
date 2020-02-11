@@ -20,10 +20,15 @@ test_find_bnat_walk =: 3 : 'assert.(<4)&-:(<2) find (0;(2;3);<3;4)'
 NB. find does not do the occur check & always succeeds
 test_find_bnat_stackerr =: 3 : 'assert.(<2)&-:(<2) find (0;(<2);<<2)'
 
-test_exts_notempty =: 3 :'assert.(0;(3;2);<4;1)&-:(<2) exts (<1) (0;(<3);<<4)'
+test_exts_bnat =: 3 :'assert.(0;(3;2);<4;1)&-:(<2) exts (<1) (0;(<3);<<4)'
+test_exts_multiple =: 3 :'assert.(0;(3;6;7);<4;8;9)&-:(6;7) exts (8;9) (0;(<3);<<4)'
+test_exts_multidimension =: 3 :'assert.((<0),(<9;10;11;12;13;14;15;16;17),<00;01;2;3;4;5;6;7;8)&-:(3 3$;/9&+i.9) exts (3 3$;/i.9) (0;'''';'''')'
 test_exts_empty =: 3 :'assert.(0;(,<2);<,<1)&-:(<2) exts (<1) (0;'''';'''')'
 
 test_occurs_yes =: 3 :'assert. (<4) occurs (0;(3;2);<4;1)'
 test_occurs_no =: 3 :'assert. 0&=(<0) occurs (0;(3;2);<4;1)'
+test_occurs_multiple_all =: 3 :'assert. (3;4) occurs (0;(3;2);<4;1)'
+test_occurs_multiple_none =: 3 :'assert. 0&= (5;6) occurs (0;(3;2);<4;1)'
+test_occurs_multiple_some =: 3 :'assert. (5;1) occurs (0;(3;2);<4;1)'
 test_occurs_wrong =: 3 :'assert. 0&=(0) occurs (0;(3;2);<4;1)'
 test_occurs_empty =: 3 :'assert. 0&=(<4) occurs (0;'''';'''')'
