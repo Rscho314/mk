@@ -2,8 +2,8 @@ NB. vars are boxed nats
 var =: ((1&=+.4&=)@(3!:0)@>*.32&=@(3!:0))`0:@.((<'')&-: +. ''&-:)
 NB. 1st cell = counter, state is an associative array
 find =: ([`((([i.~1&{::@]){2&{::@])$:])@.(var@[) :: [)
-exts =: 2 : '(((1&{::y),,u);<((2&{::y),,v)) 1 2}y'
 occurs =: 4 : '+./ x e. (1&{::,2&{::) y'
+exts =: 2 : '((((1&{::y),,u);<((2&{::y),,v)) 1 2}])`0:@.((,u,v)&occurs) y'
 
 NB.CALLFRESH====================================
 (0 : 0)
@@ -36,26 +36,33 @@ NB. unify builds up state, that's all!
 
 
 unify =: 2 : 0
-NB.WRONG, try the literature.
+NB.PROBLEM: unify <-> occurs wrong! (test_unify_bnat_bnat)
  a =. y
- if. u -: v
-  do. y return.
- elseif. (u&-:+.v&-:) ''
+ if. (u&-:+.v&-:) ''
   do. 0 return. NB.#f equivalent, does not unify
- elseif. ($u)~:($v)
+ elseif. (32&=@(3!:0) u) *: (32&=@(3!:0) v)
+  do. 0 return. NB.unification only on boxes
+ elseif. ($u)-.@-:($v)
   do. 0 return. NB.different shape, does not unify
- elseif. +/@,@var u
-  do. if. (({~I.@,@var)~u) occurs y
+ elseif. u -: v
+  do. y return.
+ end.
+ if. +/@,@var u
+  do. if. (({~I.@,@var)~u) occurs a
        do. 0 return. NB.lvar occurs
-      else. a =. ((({~I.@var)~@,u) exts ((,v){~I.@,@var u) y)
+      else. a =. ((({~I.@var)~@,u) exts ((,v){~I.@,@var u) a)
       end.
- elseif. +/@,@var v
+ end.
+ if. +/@,@var v
   do. if. (({~I.@,@var)~v) occurs a NB.use the maybe extended state
        do. 0 return.
       else. a =. ((({~I.@var)~@,v) exts ((,u){~I.@,@var v) a)
       end.
- elseif. +/@,(var u),(var v)
+ end.
+ if. -.@*@(+/)@,(var u),(var v)
   do. 0 return. NB.no lvars in u & v, does not unify
  end.
  a
 )
+
+

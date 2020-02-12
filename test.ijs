@@ -32,3 +32,11 @@ test_occurs_multiple_none =: 3 :'assert. 0&= (5;6) occurs (0;(3;2);<4;1)'
 test_occurs_multiple_some =: 3 :'assert. (5;1) occurs (0;(3;2);<4;1)'
 test_occurs_wrong =: 3 :'assert. 0&=(0) occurs (0;(3;2);<4;1)'
 test_occurs_empty =: 3 :'assert. 0&=(<4) occurs (0;'''';'''')'
+
+NB.unification is only defined on boxed arrays (corresponds to heterogeneous lists in minikanren)
+test_unify_null_null =: 3 : 'assert.0&='''' unify '''' (0;'''';'''')'
+test_unify_bnull_bnull =: 3 : 'assert.(0;'''';'''')&-:(<'''')unify(<'''')(0;'''';'''')'
+test_unify_null_var =: 3 : 'assert.0&= '''' unify (<3) (0;'''';'''')'
+test_unify_bnat_bnat =: 3 : 'assert.(0;(,<4);<,<3)&-:(<4) unify (<3) (0;'''';'''')'
+test_unify_unequal_shape=:3 :'assert.0&=(<4) unify (3;2) (0;'''';'''')'
+test_unify_crisscross =: 3 : 'assert. (0;(0;1);<(''b'';''a''))&-:(''a'';0) unify (1;''b'') (0;'''';'''')'
