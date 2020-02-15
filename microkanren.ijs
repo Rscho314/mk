@@ -1,4 +1,3 @@
-NB.The lib is defined only on boxed arrays
 NB. vars are ints
 var =: ((4&=+.1&=)@(3!:0)*.0&=@#@$)
 NB. 1st cell = counter, state is an associative array
@@ -9,34 +8,23 @@ NB.OCCURS====================================
 -essentially checks wether a variable (boxed int)
 can be found at any depth in a nested boxed array that is
 to be unified with said variable.
--currently wrong bc occurs fails on unification with self (X-:X)
-correction:
-1.a:walk the state. b:check if var
-2.independently, member in flattened substitution
-result:
-var&member->1
-notvar&member->0
-notvar&notmember->1
-var&notmember->1
+0 -> does not occur
+1 -> occurs
 )
 occurs=:2 : 0
  idx =. I.;var&.>,u
  vinu =. idx{,u
  flattensubst =. y (4 :'(<S:0)&.>(x find~])L:0 y') idx{,v
- *./vinu (e.>)"0 flattensubst
+ foundvar =. ;var@(y find~])&.>(idx{,v)
+ varintree =. vinu (e.>)"0 flattensubst
+ +./(0 1)&-:"1 foundvar,.varintree
 )
-(<1) occurs (<2) (0;(<2);<<1)
-
-a=.'a';0;'b';1;2;3 4
-b=. 9;0;'c';(<7);(<<6;5);'de'
-s=. (0;(7;8;2);<((<1);10;'r'))
-a occurs b s
 
 NB.EXTS====================================
 (0 : 0)
-
+-improvement: make 'exts' also work on non-boxed terms
 )
-exts =: 2 : '((((1&{::y),,u);<((2&{::y),,v)) 1 2}])`0:@.((,u,v)&occurs) y'
+exts =: 2 : '((((1&{::y),,u);<((2&{::y),,v)) 1 2}])`0:@.(u occurs v) y'
 
 NB.CALLFRESH====================================
 (0 : 0)
