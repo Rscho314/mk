@@ -1,59 +1,34 @@
-NB. vars are integers, or arrays of integers
-var =: (4&=+.1&=)@(3!:0)
+NB. vars are integers
+var =: e.&1 4@(3!:0)*.-.@#@$
 
 NB.FIND====================================
 (0 : 0)
-- works for both scalars & arrays, by using rank 0
-- will only be used on tree leaves, i.e. non-boxed atoms/arrays
-- yields a substituted result of the same shape as x
-- substitutions must have a uniform type, otherwise heterogeneous array->error
-
-PROBLEM:
-(1 2) find (0;(2;1);<('';3.5))
+- arrays are ATOMIC (so no problem with null)
+- x can only be a SINGLE lvar
 )
-find =:([`((]$:~]{::~2;<@[i.~1&{::@]) :: [)@.(var@[))"(0 _)
-
+find =: ([`(]$:~]{::~>:@(0&{::@]i.[))@.(e.0&{::@]))`[@.(-:&''@[)
 
 NB.OCCURS====================================
 (0 : 0)
--essentially checks wether a variable (boxed int)
-can be found at any depth in a nested boxed array that is
-to be unified with said variable.
--u is always a leaf, so non-boxed atom/vector
-0 -> does not occur
-1 -> occurs
+-essentially checks wether a variable is present in branch nodes (not root)
+-u is always an lvar, so atomic
+-walk for any lvar in tree
+QUESTION: should we walk for u too??
 )
-
-occurs=:2 : 0
-u;v;y
- idx =. I.;var&.>,u
- if. ''-:idx
+occurs =: 2 : 0
+ if. u = v
   do. 0 return.
  end.
- vinu =. idx{,u
- flattensubst =. <@(y find~])S:0 &.> idx{,v
- foundvar =. ;var@(y find~])&.>(idx{,v)
- varintree =. vinu (e.>)"0 flattensubst
- +./(0 1)&-:"1 foundvar,.varintree
+ +./ (0:`(u = y find~ ])@.var S:0) v
 )
-
-
-occurs=:2 : 0
-u;v;y
- if. -.var u
-  do. 0 return.
- elseif. ($u)-.@-:($v)
-  do. 0 return.
- end.
-  
-)
-NB.(2 3) occurs (2;<<3) (0;'';'')
 
 NB.EXTS====================================
 (0 : 0)
--improvement: make 'exts' also work on non-boxed terms
+-u is ATOMIC
 )
-exts =: 2 : '((((1&{::y),,u);<((2&{::y),,v)) 1 2}])`0:@.(u occurs v) y'
+exts =: 2 : 0
+ (u&,&.>@{.,((<v),}.))`0:@.(u occurs v) y
+)
 
 NB.CALLFRESH====================================
 (0 : 0)
