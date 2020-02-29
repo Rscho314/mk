@@ -2,8 +2,8 @@ require'format/printf'
 
 var =: 4&=@(3!:0)*.-.@#@$
 find =: ]`(>:@(0&{::@[i.]){::([,<@]))@.(var@])^:_
-occurs =: 2 : '+./ ((y find u) -: y find ]) S:0 v'
-exts =: 2 : '((u,>@{.);((<v),}.))`]@.(u occurs v) y'
+occurs =: 2 : '+./ (u -: y find ]) S:0 v'
+exts =: 2 : '((u,>@{.);((<v),}.))`0:@.(u occurs v) y'
 recextshlp=: 4 :'(0&{::x) exts (1&{::x) y'
 recexts=: (2&}.@[ $: ([ recextshlp ]))`]@.(''-:[)
 
@@ -18,13 +18,15 @@ unify =: 2 : 0
  paths =. (<S:1) {:: (u;<v)
  varpaths =. paths {~ I. isvar
  substpaths =. ((-.&.>@{.),}.)&.>varpaths
- filtered =. *./+./ paths =/ substpaths
- if. -. filtered
+ uniquevars =. {.@|:@(_2]\])@~. varpaths,substpaths
+ uniquesubst =. {:@|:@(_2]\])@~. varpaths,substpaths
+ substinpath =. *./+./ paths =/ uniquesubst
+ if. -. substinpath
   do. 0 return.
  end.
- vars =. ((u;<v){::~]) &.> varpaths
- subst =. ((u;<v){::~]) &.> substpaths
- (,vars,.subst) recexts y
+ vars =. ((u;<v){::~]) &.> uniquevars
+ subst =. ((u;<v){::~]) &.> uniquesubst
+ (,vars,:subst) recexts y
 )
 
 NB.CALLFRESH====================================
