@@ -2,21 +2,22 @@ require'format/printf'
 
 var =: 4&=@(3!:0)*.-.@#@$
 find =: ]`(>:@(0&{::@[i.]){::([,<@]))@.(var@])^:_
-occurs =: 2 : '+./ (u -: y find ]) S:0 v'
-exts =: 2 : '((u,>@{.);((<v),}.))`0:@.(u occurs v) y'
-recextshlp=: 4 :'(0&{::x) exts (1&{::x) y'
-recexts=: (2&}.@[ $: ([ recextshlp ]))`]@.(''-:[)
-
+occurs =: 4 : '+./ (((0;0){::x) -: y find ]) S: 0 (0;1){::x'
+exts =: 4 : 0
+ if. x occurs y do. 0 return. end.
+ ((,&((0;0){::x) &.>@{.y) 0} y) , < ((0;1){::x)
+)
 
 unify =: 2 : 0
- tree =. u;<v
+ tree =. u ;< v
  vars =. var S: 0 tree
- if. u -: v do. y return. elseif. -.+./vars do. 0 return. end.
+ if. u -: v do. y return. elseif. -. +./ vars do. 0 return. end.
  paths =. (< S: 1) {:: tree
- varsubst =. ~.((((-.&.>@{.) 0}])&.>),@,.~]) paths {~ I. vars
- if. -.*./ varsubst e. paths do. 0 return. end.
- y recexts~ (tree {::~]) &.> varsubst
+ varsubst =. ~. (] ,@,. ((-.&.>@{. 0}])&.>)) paths {~ I. vars
+ if. -. *./ varsubst e. paths do. 0 return. end.
+ y exts F.. ] _2 <\ (tree {::~ ]) &.> varsubst
 )
+
 
 NB.CALLFRESH====================================
 (0 : 0)
