@@ -7,26 +7,15 @@ exts =: 2 : '((u,>@{.);((<v),}.))`0:@.(u occurs v) y'
 recextshlp=: 4 :'(0&{::x) exts (1&{::x) y'
 recexts=: (2&}.@[ $: ([ recextshlp ]))`]@.(''-:[)
 
+
 unify =: 2 : 0
- if. u -: v
-  do. y return.
- end.
- isvar =. (var S:0) (u;<v)
- if. -.+./ isvar
-  do. 0 return.
- end.
- paths =. (<S:1) {:: (u;<v)
- varpaths =. paths {~ I. isvar
- substpaths =. ((-.&.>@{.),}.)&.>varpaths
- uniquevars =. {.@|:@(_2]\])@~. varpaths,substpaths
- uniquesubst =. {:@|:@(_2]\])@~. varpaths,substpaths
- substinpath =. *./+./ paths =/ uniquesubst
- if. -. substinpath
-  do. 0 return.
- end.
- vars =. ((u;<v){::~]) &.> uniquevars
- subst =. ((u;<v){::~]) &.> uniquesubst
- (,vars,:subst) recexts y
+ tree =. u;<v
+ vars =. var S: 0 tree
+ if. u -: v do. y return. elseif. -.+./vars do. 0 return. end.
+ paths =. (< S: 1) {:: tree
+ varsubst =. ~.((((-.&.>@{.) 0}])&.>),@,.~]) paths {~ I. vars
+ if. -.*./ varsubst e. paths do. 0 return. end.
+ y recexts~ (tree {::~]) &.> varsubst
 )
 
 NB.CALLFRESH====================================
