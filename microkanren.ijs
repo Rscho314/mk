@@ -1,21 +1,21 @@
 require'format/printf'
 
 var =: 4&=@(3!:0)*.-.@#@$
-find =: ]`(>:@(1&{::@[i.]){::(}.@[,<@]))@.(var@])^:_
+find =: ]`(>:@(}.@(0&{::)@[i.]){::([,<@]))@.(var@])^:_
 occurs =: 4 : '+./ (((0;0){::x) -: y find ]) S: 0 (0;1){::x'
 
 exts =: 4 : 0
  'a b' =. y&find &.> > x
  if. a -: b do. y return. end.
- if. (<a) e. (2 }. y) do. a =. y {::~ 1 ; (2 }. y) i. (<a) end.
- if. (<b) e. (2 }. y) do. b =. y {::~ 1 ; (2 }. y) i. (<b) end.
- (<a;b) ({:@>@[ ,~ ((],((0;0)&{::)@[) &.> 1&{@]) 1} ])`0:@.(occurs) y
+ if. (<a) e. (}. y) do. a =. y {::~ 0 ; >: (}. y) i. (<a) end.
+ if. (<b) e. (}. y) do. b =. y {::~ 0 ; >: (}. y) i. (<b) end.
+ (<a;b) ({:@>@[ ,~ ((],((0;0)&{::)@[) &.> {.@]) 0} ])`0:@.(occurs) y
 )
 
 unify =: 2 : 0
- scope =. }. ; 2 {. y
+ inscope =. ((0;0) {:: y) > ]
  tree =. u ;< v
- vars =. (0:`(e.&scope)@.var) S: 0 tree
+ vars =. (0:`inscope@.var) S: 0 tree
  if. u -: v do. y return. elseif. -. +./ vars do. 0 return. end.
  paths =. (< S: 1) {:: tree
  varsubst =. ~. (] ,@,. ((-.&.>@{. 0}])&.>)) paths {~ I. vars
@@ -23,15 +23,9 @@ unify =: 2 : 0
  y exts F.. ] _2 <\ (tree {::~ ]) &.> varsubst
 )
 
-eq =: 2 : 0
- uni =. (y find u) unify (y find v) y
- if. uni
-  do. < uni NB.to change to account for variables that have just been fused!
- else. < y NB.to change to account for variables that have just been fused!
- end.
-)
+eq =: 2 : '<(y find u) unify (y find v) y'
 
-cf =: 3 : '((>:@{.,({.,}.)) &.>@{. 0} ]) y'
+cf =: 1 : 'u ((>:@{.,}.) &.> {. y) 0} y'
 
 app =: 2 : 0 NB.seek to make this non-recursive!
  if. u -: ''
@@ -56,20 +50,25 @@ conj =: 2 : '(u y) apm v'
 
 
 (0 : 0)
--space inefficiency -> implement path compression in 'exts' or 'unify'
 -make a dyadic version of cf to generate several variables at once
 -Also, maybe there is the opportunity for inverted tables, since the
 1st (counter) & 2nd (variables) cells of goals all are the same type.
 
-
-('z' eq 2) disj ('sz' eq 2) cf 2;''
-('z' eq 2) conj ((3 eq 2)@cf) (cf 2;'') NB.still problem!
-('z' eq 2) conj ((2 eq 3)@cf) (cf 2;'')
+('sz' eq 2) cf (<2)
+('z' eq 2 cf) disj ('sz' eq 2 cf)  (<2)
+(('z' eq 2) disj ('sz' eq 2)) cf (<2)
+(('z' eq 2) conj ((3 eq 2) cf)) cf (<2)
 
 s/c structure
 -------------
--box   0: car is counter, cdr is list of fresh lvars
--box   1: list of fused variables
--box >=2: boxes containing fused values
+-box   0: car is counter, cdr is list of fused lvars
+-box >=1: boxes containing fused values
+-empty s/c is (<2)
 
+scoping
+-------
+-cf increments the counter
+-lvars in scope are those [2 .. (counter - 1)]. Should be ok since lang is pure?
+-a lvar in scope but not fused is considered fresh.
+-test for freshness of lvar? -> 'find' it. If this returns itself (not found), it's fresh!
 )
