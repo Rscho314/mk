@@ -33,7 +33,7 @@ app =: 4 : 0 NB.seek to make this non-recursive!
  if. x -: ''
   do. y
  elseif. prmtst x
-  do. delay ((5!:5) <'y') , ' app , ". x (5!:0) '''''
+  do. 'no cigar'NB.delay ((5!:5) <'y') , ' app , ". x (5!:0) '''''
  elseif. do. ({.x) , ((}.x) app y)
  end.
 )
@@ -42,7 +42,7 @@ apm =: 4 : 0
  if. x -: ''
   do. ''
  elseif. prmtst x
-  do. delay '(". x (5!:0) '''') apm ' , ((5!:5) <'y')
+  do. delay '(". x (5!:0) '''') apm ' , (5!:5) <'y'
  elseif. do. (v (0 {:: u)) app ((}.u) apm v)
  end.
 )
@@ -50,8 +50,31 @@ apm =: 4 : 0
 dis =: 2 : '(u y) app (v y)'
 con =: 2 : '(u y) apm v'
 
+pull =: 3 : 0
+ if. prmtst y
+  do. pull ". y (5!:0) ''
+ else. y
+ end.
+)
+
+take =: 4 : 0
+ if. '' -: y
+  do. ''
+ elseif. 0&-: <: x
+  do. {. y
+ elseif. do. ({. y) , (<: x) take (pull {: y)
+ end.
+)
+
 fives =: 3 : '((,5) equ (y {::~ ;~0) fsh) dis (3 : ''delay ''''fives '''' , (5!:5) <''''y'''''') y'
-(fives <2)
+sixes =: 3 : '((,6) equ (y {::~ ;~0) fsh) dis (3 : ''delay ''''sixes '''' , (5!:5) <''''y'''''') y'
+fives_and_sixes =: 3 : 'fives dis sixes y'
+6 take fives est NB.take all would be _ take (fives <2) -> non-termination
+4 take sixes est
+a =. {:: {: sixes est
+(5!:5) <'a'
+fives_and_sixes est
+3 take fives_and_sixes est
 
 (0 : 0)
 -make a dyadic version of cf to generate several variables at once
