@@ -1,5 +1,8 @@
 require'format/printf'
-est =. < 2
+prmshp =: <(<(<0$a:),<,00),<(<(<(<0$a:),(<,01),(<,00),<,00),<(<0$a:),(<,01),(<,00),<,01),<(<(<0$a:),(<,01),(<,01),<,00),<(<0$a:),(<,01),(<,01),<,01
+prmtst =: 0:`(((,':');(,'0');3)&-:@(('';0)&{:: ; ('';1;0)&{::))@.(prmshp-:{::)
+delay =: 3 : '<(<,'':''),<(<(,''0'');3),<(,''0'');(5!:5)<''y'''
+est =: < 2
 var =: 4&=@(3!:0) *. -.@#@$
 get =: ]`(>:@(}.@(0 {:: [) i. ]) {:: ([@, <))@.(var@])^:_
 occ =: 4 : '+./ ((x {::~ ;~0) -: y&get) S: 0 x {::~ 0;1'
@@ -26,22 +29,20 @@ uni =: 2 : 0
 equ =: 2 : '<(y get u) uni (y get v) y'
 fsh =: 1 : 'u ((>:@{. , }.) &.> {. y) 0} y'
 
-app =: 2 : 0 NB.seek to make this non-recursive!
- if. u -: ''
-  do. v
- elseif. 3&=@(4!:0) <'u'
-  do. 'promise app'
-  NB.do. 3 : '(' , ((5!:5)<'v') , ') app ((' , ((5!:5)<'u') , ')'''')'
- NB.elseif. do. ({.u) , ((}.u) app v)
+app =: 4 : 0 NB.seek to make this non-recursive!
+ if. x -: ''
+  do. y
+ elseif. prmtst x
+  do. delay ((5!:5) <'y') , ' app , ". x (5!:0) '''''
+ elseif. do. ({.x) , ((}.x) app y)
  end.
 )
 
-apm =: 2 : 0
- if. u -: ''
+apm =: 4 : 0
+ if. x -: ''
   do. ''
- elseif. 3&=@(4!:0) <'u'
-  do. 'promise apm'
-  NB.do. 3 : '((' , ((5!:5)<'u') , ')'''')apm(' , ((5!:5)<'v') , ')'
+ elseif. prmtst x
+  do. delay '(". x (5!:0) '''') apm ' , ((5!:5) <'y')
  elseif. do. (v (0 {:: u)) app ((}.u) apm v)
  end.
 )
@@ -49,9 +50,10 @@ apm =: 2 : 0
 dis =: 2 : '(u y) app (v y)'
 con =: 2 : '(u y) apm v'
 
+fives =: 3 : '((,5) equ (y {::~ ;~0) fsh) dis (3 : ''delay ''''fives '''' , (5!:5) <''''y'''''') y'
+(fives <2)
+
 (0 : 0)
--app & apm don't have to test for procedures, only for promises (monadic verb with empty arg)!
--promises should probably be atomic representations (5!:1), then forced with (5!:0)
 -make a dyadic version of cf to generate several variables at once
 -Also, maybe there is the opportunity for inverted tables, since the
 1st (counter) & 2nd (variables) cells of goals all are the same type.
@@ -62,14 +64,6 @@ tests:
 ('z' equ 2 fsh) dis ('sz' equ 2 fsh)  est
 (('z' equ 2) dis ('sz' equ 2)) fsh est
 (('z' equ 2) con ((3 equ 2) fsh)) fsh est
-
-fives =. 3 : 0
- f =. (3 : 'raoul')
- af =. (5!:1) < 'f'
-qprintf'af '
- (3 : 'af') dis ((,5) equ (y {::~ ;~0)) fsh y
-
-fives est
 
 s/c structure
 -------------
