@@ -1,7 +1,4 @@
 require'format/printf'
-prmshp =: <(<(<0$a:),<,00),<(<(<(<0$a:),(<,01),(<,00),<,00),<(<0$a:),(<,01),(<,00),<,01),<(<(<0$a:),(<,01),(<,01),<,00),<(<0$a:),(<,01),(<,01),<,01
-prmtst =: 0:`(((,':');(,'0');3)&-:@(('';0)&{:: ; ('';1;0)&{::))@.(prmshp-:{::)
-delay =: 3 : '<(<,'':''),<(<(,''0'');3),<(,''0'');(5!:5)<''y'''
 est =: < 2
 var =: 4&=@(3!:0) *. -.@#@$
 get =: ]`(>:@(}.@(0 {:: [) i. ]) {:: ([@, <))@.(var@])^:_
@@ -32,17 +29,17 @@ fsh =: 1 : 'u ((>:@{. , }.) &.> {. y) 0} y'
 app =: 4 : 0 NB.seek to make this non-recursive!
  if. x -: ''
   do. y
- elseif. prmtst x
-  do. 'no cigar'NB.delay ((5!:5) <'y') , ' app , ". x (5!:0) '''''
- elseif. do. ({.x) , ((}.x) app y)
+ elseif. 2&=@(3!:0)@> x
+  do. <'(' , ((5!:5)<'y') , ') app ((' , '3 :''' , (0 {:: x) , ''')'''')'
+ elseif. do. ({.x) , (}.x) app y
  end.
 )
 
 apm =: 4 : 0
  if. x -: ''
   do. ''
- elseif. prmtst x
-  do. delay '(". x (5!:0) '''') apm ' , (5!:5) <'y'
+ elseif. 2&=@(3!:0)@> x
+  do. 'no cigar'
  elseif. do. (v (0 {:: u)) app ((}.u) apm v)
  end.
 )
@@ -51,8 +48,8 @@ dis =: 2 : '(u y) app (v y)'
 con =: 2 : '(u y) apm v'
 
 pull =: 3 : 0
- if. prmtst y
-  do. pull ". y (5!:0) ''
+ if. 2&=@(3!:0)@> y
+  do. pull (3 : (0 {:: y)) ''
  else. y
  end.
 )
@@ -66,15 +63,13 @@ take =: 4 : 0
  end.
 )
 
-fives =: 3 : '((,5) equ (y {::~ ;~0) fsh) dis (3 : ''delay ''''fives '''' , (5!:5) <''''y'''''') y'
-sixes =: 3 : '((,6) equ (y {::~ ;~0) fsh) dis (3 : ''delay ''''sixes '''' , (5!:5) <''''y'''''') y'
+fives =: 3 : '((,5) equ (y {::~ ;~0) fsh) dis (3 : ''<''''fives ('''' , ((5!:5) <''''y'''') , '''')'''''') y'
+sixes =: 3 : '((,6) equ (y {::~ ;~0) fsh) dis (3 : ''<''''sixes ('''' , ((5!:5) <''''y'''') , '''')'''''') y'
 fives_and_sixes =: 3 : 'fives dis sixes y'
 6 take fives est NB.take all would be _ take (fives <2) -> non-termination
 4 take sixes est
-a =. {:: {: sixes est
-(5!:5) <'a'
 fives_and_sixes est
-3 take fives_and_sixes est
+6 take fives_and_sixes est
 
 (0 : 0)
 -make a dyadic version of cf to generate several variables at once
