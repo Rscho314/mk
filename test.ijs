@@ -1,5 +1,9 @@
 load'~Projects/mk/microkanren.ijs'
 
+fives =: 3 : '((,5) equ (y {::~ ;~0) fsh) dis (3 : ''<''''fives ('''' , ((5!:5) <''''y'''') , '''')'''''') y'
+sixes =: 3 : '((,6) equ (y {::~ ;~0) fsh) dis (3 : ''<''''sixes ('''' , ((5!:5) <''''y'''') , '''')'''''') y'
+fives_and_sixes =: 3 : 'fives dis sixes y'
+
 test_var_bnat =: 3 : 'assert.0&=var<2'
 test_var_bbool =: 3 : 'assert.0&=var<1'
 test_var_bnull =: 3 : 'assert.0&=var<'''''
@@ -48,3 +52,8 @@ test_uni_crisscross =: 3 : 'assert. (4 2 3;''b'';''a'')&-:(''a'';2) uni (3;''b''
 test_uni_nested =: 3 : 'assert.(4 2 3;''d'';''c'')&-:(''a'';<<(''c'';2)) uni (''b'';<<(3;''d'')) (<4)'
 test_uni_walk =: 3 : 'assert.(4 2 3;3;1)&-:2 uni 3 (4 2 3;3;1)'
 test_uni_walk_add =: 3 : 'assert.(5 2 3 2;4;''a'';3)&-:2 uni 3 (5 2 3;4;''a'')'
+
+test_infinite_stream_dfs =: 3 : 'assert. (4#<3 2;,6)&-: 4 cis sixes'
+test_infinite_stream_interleave =: 3 : 'assert. (;3#<(3 2;,5);<(3 2;,6))&-: 6 cis fives_and_sixes'
+
+test_con =: 3 : 'assert. (,<4 2 3;''z'';2)&-: (''z'' equ 2) con (3 equ 2 fsh) fsh est'
