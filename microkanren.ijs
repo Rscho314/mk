@@ -12,19 +12,14 @@ ext =: 4 : 0
 
 uni =: 2 : 0
  if. u -: v do. y return. end.
- vp =. (I.@((0:`((y{::~;~0)&>)@.var)S:0){(<S:1)@{::) (u;<v)
+ vp =. (I.@((0:`((y<:@{::~;~0)&(-@<:@+~@I.))@.var)S:0){(<S:1)@{::) (u;<v)
  if. vp -: '' do. 0 return. end.
  vs =. ~. (] ,@,. (-.&.>@{. 0}])&.>) vp
  if. vs -.@(*./)@e. ,@(<\ S: 1)@{:: (u;<v) do. 0 return. end.
  y ext F.. ] _2 <\ ]@{::&(u;<v) &.> vs
 )
 
-NB.2 uni ('a';'b') (4 3;<('a';'b'))
-NB.2 equ ('a';'b') fsh est
-NB.('a';3) uni (2;'b') (<4)
-NB.2 equ ('a') fsh est
-NB.2 equ ('') fsh est
-NB.2 equ ('a';2) fsh est
+NB.2 uni (3;'b') (<4) Fails due to 'uni' algorthm (test_uni_subtree_var)
 
 equ =: 2 : '<(y get u) uni (y get v) y'
 fsh =: 1 : 'u ((>:@{. , }.) &.> {. y) 0} y'
@@ -53,14 +48,14 @@ pul =: (".@>)^:(0:`(2&=@(3!:0)@>)@.(1 = #))
 tak =: ({.@] , (<:@[ $: pul@{:@]))`{.@.(''&-:@] +. 0&-:@<:@[)
 cis =: 2 : 'u tak pul v est'
 
-fives =: 3 : 0
- ((,5) equ (y {::~ ;~0) fsh) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
-)
-fives est
-3 cis fives
+NB.fives =: 3 : 0
+NB.((,5) equ (y {::~ ;~0) fsh) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
+NB.)
+NB.fives est
+NB.3 cis fives
 
-peano =: 3 : 0
- ((y {::~ ;~0) equ 'z') dis (((<:@((0;0)&{::)y) equ ('s' ; (y {::~ ;~0))) con (3 : '<''peano ('',((5!:5)<''y''),'')''') fsh) fsh y
-)
+NB.peano =: 3 : 0
+NB. ((y {::~ ;~0) equ 'z') dis (((<:@((0;0)&{::)y) equ ('s' ; (y {::~ ;~0))) con (3 : '<''peano ('',((5!:5)<''y''),'')''') fsh) fsh y
+NB.)
 NB.peano est
 NB.2 cis peano
