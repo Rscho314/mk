@@ -8,7 +8,8 @@ fives =: 3 : 0
 sixes =: 3 : 0
  ((,6) equ (#y) fsh) dis (3 : '<''sixes ('' , ((5!:5) <''y'') , '')''') y
 )
-NB.fives_and_sixes =: 3 : 'fives dis sixes y'
+
+fives_and_sixes =: 3 : 'fives dis sixes y'
 
 test_var_bnat =: 3 : 'assert. 0&= var < 2'
 test_var_bbool =: 3 : 'assert. 0&= var < 1'
@@ -43,7 +44,7 @@ test_ext_empty =: 3 : '(_. ; _. ; 3)&-: (< 2 ; 3) ext (_. ; _. ; _.)'
 test_ext_append =: 3 : '(_. ; _. ; _. ; _. ; 5)&-: (< 4 ; 5) ext (_. ; _. ; _. ; _. ; _.)'
 test_ext_equal =: 3 : '(_. ; _. ; 2)&-: (< 2 ; 2) ext (_. ; _. ; _.)'
 test_ext_occ =: 3 : 'assert. _1&-: (< 2 ; < < 2) ext (_. ; _. ; _.) '
-test_ext_path_compression =: 3 : 'assert. (_. ; _. ; ''z'' ; 2)&-: (< 3 ; ''z'') ext (_. ; _. ; ''z'' ; _.)'
+test_ext_path_compression =: 3 : '(_. ; _. ; ''z'' ; 2)&-: (< 3 ; ''z'') ext (_. ; _. ; ''z'' ; _.)'
 
 test_uni_null_null =: 3 : 'assert. ''''&= '''' uni '''' '''' '
 test_uni_bnull_bnull =: 3 : 'assert. ''''&-: (< '''') uni (< '''') '''' '
@@ -66,6 +67,6 @@ uni_scope_expect =: 'domain error'
 test_uni_scope =: 3 : '0 uni 1 (,<_.)'
 
 test_infinite_stream_dfs =: 3 : 'assert. (4 # < , < , 5)&-: 4 cis fives'
-test_infinite_stream_interleave =: 3 : 'assert. (; 3 # < (< , 5) ; < (< , 6))&-: 6 cis fives_and_sixes'
+test_infinite_stream_interleave =: 3 : 'assert. (; 3 # < (, < , 5) ; < (, < , 6))&-: 6 cis fives_and_sixes'
 
 test_con =: 3 : 'assert. (, < ''z'' ; 0)&-: (''z'' equ 0) con (1 equ 0 fsh) fsh '''' '
