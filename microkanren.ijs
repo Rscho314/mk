@@ -12,11 +12,14 @@ uni =: 2 : 0
  'u v' =. y&get &.> (u;<v)
  if. u -: v do. y return. end.
  if. vp -: '' do. _1 return. end.
- vs =. ~. (] ,@,. (-.&.>@{. 0}])&.>) vp
- if. vs -.@(*./)@e. ,@(<\ S: 1)@{:: (u;<v) do. _1 return. end.
- y ext F.. ] _2 <\ ]@{::&(u;<v) &.> vs
+ s =. (-.&.>@{. 0}])&.> vp
+ fv =. vp {~I. s e. ,@(<\ S: 1)@{:: (u;<v)
+ fs =. s {~I. s e. ,@(<\ S: 1)@{:: (u;<v)
+ ffv =. ({~I.@~:@:(}. &.>))~ fv
+ ffs =. ({~I.@~:@:(}. &.>))~ fs
+ if. (2&> +. {:@#:) # ffv , ffs do. _1 return. end.
+ y ext F.. ] _2 <\ ]@{::&(u;<v) &.> ffv ,@,. ffs
 )
-NB.0 uni (1;'b') (_. ; _.) Fails due to 'uni' algorthm (test_uni_subtree_var)
 
 equ =: 2 : '<(y get u) uni (y get v) y'
 fsh =: 1 : 'u (<_.) ,~ y'

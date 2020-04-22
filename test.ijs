@@ -1,7 +1,5 @@
 load'~Projects/mk/microkanren.ijs'
 
-NB. Tests with no 'assert.' are not really tested, bc _. -: _. -> 0
-
 fives =: 3 : 0
  ((,5) equ (#y) fsh) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
 )
@@ -40,28 +38,31 @@ test_occ_tree_yes =: 3 : 'assert. (< 2 ; < (2 ; 3 ; 4)) occ '''' '
 test_occ_nested =: 3 : 'assert. (< 2 ; < (3 ; (< < (4 ; 2)) ; 4)) occ '''' '
 test_occ_nested_walk =: 3 : 'assert. (< 2 ; < (3 ; (< < (4 ; 3)) ; 4)) occ (_. ; _. ; 2 ; 2)'
 
-test_ext_empty =: 3 : '(_. ; _. ; 3)&-: (< 2 ; 3) ext (_. ; _. ; _.)'
-test_ext_append =: 3 : '(_. ; _. ; _. ; _. ; 5)&-: (< 4 ; 5) ext (_. ; _. ; _. ; _. ; _.)'
-test_ext_equal =: 3 : '(_. ; _. ; 2)&-: (< 2 ; 2) ext (_. ; _. ; _.)'
-test_ext_occ =: 3 : 'assert. _1&-: (< 2 ; < < 2) ext (_. ; _. ; _.) '
-test_ext_path_compression =: 3 : '(_. ; _. ; ''z'' ; 2)&-: (< 3 ; ''z'') ext (_. ; _. ; ''z'' ; _.)'
+test_ext_empty =: 3 : 'assert. ''_.;_.;3''&-: ((5!:5) < ''a'') [ a =. (< 2 ; 3) ext (_. ; _. ; _.)'
+test_ext_append =: 3 : 'assert. ''_.;_.;_.;_.;5''&-: ((5!:5) < ''a'') [ a =. (< 4 ; 5) ext (_. ; _. ; _. ; _. ; _.)'
+test_ext_equal_nonvar =: 3 : 'assert. ''_.;_.;,2''&-: ((5!:5) < ''a'') [ a =. (<(,2);,2) ext (_. ; _. ; _.)'
+test_ext_equal_var =: 3 : 'assert. _1&-: (<2;2) ext (_. ; _. ; _.)'
+test_ext_occ =: 3 : 'assert. _1&-: (< 2 ; < < 2) ext (_. ; _. ; _.)'
+test_ext_same =: 3 : 'assert. ''(<_.),(<_.),<<2''&-: ((5!:5) < ''a'') [ a =. (< (<2); < < 2) ext (_. ; _. ; _.)'
+test_ext_avoid_duplicate =: 3 : 'assert. ''_.;_.;''''z'''';2''&-: ((5!:5) < ''a'') [ a =.  (< 3 ; ''z'') ext (_. ; _. ; ''z'' ; _.)'
+test_ext_no_path_compression =: 3 : 'assert. ''_.;_.;''''z'''';2;3''&-: ((5!:5) < ''a'') [ a =.  (< 4 ; 2) ext (_. ; _. ; ''z'' ; 2 ; _.)'
 
-test_uni_null_null =: 3 : 'assert. ''''&= '''' uni '''' '''' '
+test_uni_null_null =: 3 : 'assert. ''''&-: '''' uni '''' '''' '
 test_uni_bnull_bnull =: 3 : 'assert. ''''&-: (< '''') uni (< '''') '''' '
-test_uni_null_nat =: 3 : '(_. ; '''')&-: '''' uni 1 (_. ; _.)'
-test_uni_nat_nat =: 3 : '(1 ; _.)&-: 0 uni 1 (_. ; _.)'
-test_uni_bnat_bnat =: 3 : '(1 ; _.)&-:(<0) uni (<1) (_. ; _.)'
+test_uni_null_nat =: 3 : 'assert. ''_.;''''''''''&-: ((5!:5) < ''a'') [ a =. '''' uni 1 (_. ; _.)'
+test_uni_nat_nat =: 3 : 'assert. ''1;_.''&-: ((5!:5) < ''a'') [ a =. 0 uni 1 (_. ; _.)'
+test_uni_bnat_bnat =: 3 : 'assert. ''1;_.''&-: ((5!:5) < ''a'') [ a =. (<0) uni (<1) (_. ; _.)'
 test_uni_unequal_shape =: 3 : 'assert. _1&= (<0) uni (1;2) (_. ; _. ; _.)'
-test_uni_equal =: 3 : '(_. ; _. ; _.)&-:2 uni 2 (_. ; _. ; _.)'
+test_uni_equal =: 3 : 'assert. ''_.;_.;_.''&-: ((5!:5) < ''a'') [ a =. 2 uni 2 (_. ; _. ; _.)'
 test_uni_occ =: 3 : 'assert. _1&= 2 uni (<2) (_. ; _. ; _.)'
 test_uni_occ_walk =: 3 : 'assert. _1&= 0 uni (<1) (_. ; 0)'
 test_uni_crisscross =: 3 : 'assert. (''b'' ; ''a'')&-: (''a'' ; 0) uni (1 ; ''b'') (_. ; _.)'
 test_uni_nested =: 3 : 'assert. (''d'' ; ''c'')&-: (''a'' ; < < (''c'' ; 0)) uni (''b'' ; < < (1 ; ''d'')) (_. ; _.)'
 test_uni_walk =: 3 : 'assert. (1 ; 2 ; ''a'')&-: 0 uni 1 (1 ; 2 ; ''a'')'
 test_uni_walk_add =: 3 : 'assert. (''b'' ; ''a'' ; 0)&-: 0 uni 2 (''b'' ; ''a'' ; _.)'
-test_uni_subtree =: 3 : '(_. ; _. ;<(''a'';''b''))&-: 2 uni (''a'';''b'') (_. ; _. ; _.)'
+test_uni_subtree =: 3 : 'assert. ''(<_.),(<_.),<''''a'''';''''b''''''&-: ((5!:5) < ''a'') [ a =. 2 uni (''a'';''b'') (_. ; _. ; _.)'
 
-test_uni_subtree_var =: 3 : 'assert. (4 2;<(3;''b''))&-: 0 uni (1;''b'') (_. ; _.)'
+test_uni_subtree_var =: 3 : 'assert. ''(<1;''''b''''),<_.''&-: ((5!:5) < ''a'') [ a =. 0 uni (1;''b'') (_. ; _.)'
 
 uni_scope_expect =: 'domain error'
 test_uni_scope =: 3 : '0 uni 1 (,<_.)'
