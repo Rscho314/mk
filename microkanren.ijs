@@ -11,14 +11,10 @@ uni =: 2 : 0
  vp =. (I.@((0:`((var@(y&get))`_1:@.((<:#y)&I.))@.var)S:0){(<S:1)@{::) (u;<v)
  'u v' =. y&get &.> (u;<v)
  if. u -: v do. y return. end.
- if. vp -: '' do. _1 return. end.
  s =. (-.&.>@{. 0}])&.> vp
- fv =. vp {~I. s e. ,@(<\ S: 1)@{:: (u;<v)
- fs =. s {~I. s e. ,@(<\ S: 1)@{:: (u;<v)
- ffv =. ({~I.@~:@:(}. &.>))~ fv
- ffs =. ({~I.@~:@:(}. &.>))~ fs
- if. (2&> +. {:@#:) # ffv , ffs do. _1 return. end.
- y ext F.. ] _2 <\ ]@{::&(u;<v) &.> ffv ,@,. ffs
+ vs =. (0&{:: ,@,. 1&{::) ({~I.@~:@:(}. &.>))~ &.> (I. s e. ,@(<\ S: 1)@{::(u;<v))&{ &.> (vp;<s)
+ if. (2&> +. {:@#:) # vs do. _1 return. end.
+ y ext F.. ] _2 <\ ]@{::&(u;<v) &.> vs
 )
 
 equ =: 2 : '<(y get u) uni (y get v) y'
@@ -37,7 +33,7 @@ apm =: 2 : 0
  if. u -: ''
   do. ''
  elseif. 2&=@(3!:0)@> u
-  do. < '((3 :''' , (0 {:: u) , ''')'''') apm (' , ((5!:5)<'v') , ')'
+  do. < '((3 :' , ((5!:5)<'a') , ')'''') apm (' , ((5!:5)<'v') , ')' [ a =.0{::u
  elseif. do. (v (0 {:: u)) app ((}.u) apm v)
  end.
 )
@@ -46,10 +42,4 @@ dis =: 2 : '(u y) app (v y)'
 con =: 2 : '(u y) apm v'
 pul =: (".@>)^:(0:`(2&=@(3!:0)@>)@.(1 = #))
 tak =: ({.@] , (<:@[ $: pul@{:@]))`{.@.(''&-:@] +. 0&-:@<:@[)
-cis =: 2 : 'u tak pul v '''' '
-
-NB.peano =: 3 : 0
-NB. ((y {::~ ;~0) equ 'z') dis (((<:@((0;0)&{::)y) equ ('s' ; (y {::~ ;~0))) con (3 : '<''peano ('',((5!:5)<''y''),'')''') fsh) fsh y
-NB.)
-NB.peano est
-NB.2 cis peano
+cis =: 2 : 'u tak pul v (<_.)'

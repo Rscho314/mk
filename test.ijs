@@ -1,13 +1,17 @@
 load'~Projects/mk/microkanren.ijs'
 
 fives =: 3 : 0
- ((,5) equ (#y) fsh) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
+ ((,5) equ (<:#y)) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
 )
 sixes =: 3 : 0
- ((,6) equ (#y) fsh) dis (3 : '<''sixes ('' , ((5!:5) <''y'') , '')''') y
+ ((,6) equ (<:#y)) dis (3 : '<''sixes ('' , ((5!:5) <''y'') , '')''') y
 )
 
 fives_and_sixes =: 3 : 'fives dis sixes y'
+
+peano =: 3 : 0
+ (3 :'''z'' equ (<:#y) y') dis ((3 :'(2-~#y) equ (''s'';<:@#y) y') con (3 : '<''peano ('',((5!:5)<''y''),'')''') fsh) y
+)
 
 test_var_bnat =: 3 : 'assert. 0&= var < 2'
 test_var_bbool =: 3 : 'assert. 0&= var < 1'
@@ -67,7 +71,9 @@ test_uni_subtree_var =: 3 : 'assert. ''(<1;''''b''''),<_.''&-: ((5!:5) < ''a'') 
 uni_scope_expect =: 'domain error'
 test_uni_scope =: 3 : '0 uni 1 (,<_.)'
 
-test_infinite_stream_dfs =: 3 : 'assert. (4 # < , < , 5)&-: 4 cis fives'
-test_infinite_stream_interleave =: 3 : 'assert. (; 3 # < (, < , 5) ; < (, < , 6))&-: 6 cis fives_and_sixes'
+test_infinite_stream_dfs =: 3 : 'assert. (4 # << , 5)&-: 4 cis fives'
+test_infinite_stream_interleave =: 3 : 'assert. (; 3 # (<(< , 5) ;<(< , 6)))&-: 6 cis fives_and_sixes'
 
 test_con =: 3 : 'assert. (, < ''z'' ; 0)&-: (''z'' equ 0) con (1 equ 0 fsh) fsh '''' '
+
+test_peano =: 3 : '(<<''z''),(<(<''s'';1),<''z''),<(<''s'';1),(<''s'';2),<''z''&-: (5!:5)<''a'' [ a =. 3 cis peano'
