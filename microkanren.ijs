@@ -28,16 +28,6 @@ app =: 4 : 0
  end.
 )
 
-appit =: 2 : 0
- while. u -.@-: ''
-   do.if. 2&=@(3!:0)@> u
-       do. < '(' , ((5!:5)<'v') , ') appit (3 :' , ((5!:5)<'a') , ')(', ((5!:5)<'y') ,')' [ a =.0{::u
-      else. 'u y' =. (}.u);(y,~<@{.u)
-      end.
- end.
- y
-)
-
 apm =: 2 : 0
  if. u -: ''
   do. ''
@@ -48,23 +38,19 @@ apm =: 2 : 0
 )
 
 dis =: 2 : '(u y) app (v y)'
-disit =: 2 : '(u y) appit (v y) '''' '
 con =: 2 : '(u y) apm v'
 pul =: (".@>)^:(0:`(2&=@(3!:0)@>)@.(1 = #))
-tak =: ({.@] , (<:@[ $: pul@{:@]))`{.@.(''&-:@] +. 0&-:@<:@[)
-cis =: 2 : 'u tak pul v (<_.)'
 
-fivesit =: 3 : 0
- ((,5) equ (<:#y)) disit (3 : '<''fivesit ('' , ((5!:5) <''y'') , '')''') y
+tak =: 2 : 0
+ while. (u > 0) *. (v -.@-: '')
+  do. 'u v y' =. (<: u);(pul@{: v);<(y,~{.v)
+ end.
+ y
 )
-sixesit =: 3 : 0
- ((,6) equ (<:#y)) disit (3 : '<''sixesit ('' , ((5!:5) <''y'') , '')''') y
-)
-fives_and_sixesit =: 3 :'fivesit disit sixesit y'
-10 cis fives_and_sixesit
 
-fives =: 3 : 0
- ((,5) equ (<:#y)) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
-)
-(6!:2 , 7!:2) '1000 cis fives' NB.reference
-(6!:2 , 7!:2) '1000 cis fivesit' NB.This is 10X faster with 1/2 the memory!
+cis =: 2 : 'u tak (pul@v (<_.)) '''' '
+
+NB.(6!:2 , 7!:2) '10000 cis fives' NB.reference
+NB.(6!:2 , 7!:2) '10000 cisit fives' NB.marginally faster, but 1/3 - 1/4 mermory
+NB.(6!:2 , 7!:2) '10000 cis fivesit' NB.3 - 10X faster with 1/2 the memory
+NB.(6!:2 , 7!:2) '10000 cisit fivesit' NB.This is 3 - 10X faster with 1/25 the memory!
