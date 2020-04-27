@@ -62,7 +62,7 @@ test_uni_occ =: 3 : 'assert. _1&= 2 uni (<2) (_. ; _. ; _.)'
 test_uni_occ_walk =: 3 : 'assert. _1&= 0 uni (<1) (_. ; 0)'
 test_uni_crisscross =: 3 : 'assert. (''b'' ; ''a'')&-: (''a'' ; 0) uni (1 ; ''b'') (_. ; _.)'
 test_uni_nested =: 3 : 'assert. (''d'' ; ''c'')&-: (''a'' ; < < (''c'' ; 0)) uni (''b'' ; < < (1 ; ''d'')) (_. ; _.)'
-test_uni_walk =: 3 : 'assert. (1 ; 2 ; ''a'')&-: 0 uni 1 (1 ; 2 ; ''a'')'
+test_uni_walk =: 3 : 'assert. (''a'' ; 2 ; ''a'')&-: 0 uni 1 (1 ; 2 ; ''a'')'
 NB.test_uni_walk_add =: 3 : 'assert. (''b'' ; ''a'' ; 0)&-: 0 uni 2 (''b'' ; ''a'' ; _.)'
 test_uni_subtree =: 3 : 'assert. ''(<_.),(<_.),<''''a'''';''''b''''''&-: ((5!:5) < ''a'') [ a =. 2 uni (''a'';''b'') (_. ; _. ; _.)'
 
@@ -74,7 +74,7 @@ test_uni_scope =: 3 : '0 uni 1 (,<_.)'
 test_infinite_stream_dfs =: 3 : 'assert. (4 # <,<,5)&-: 4 cis fives'
 test_infinite_stream_interleave =: 3 : 'assert. ((<,<,6),(<,<,5),(<,<,6),(<,<,5))&-: 4 cis fives_and_sixes'
 
-test_con =: 3 : 'assert. (, < ''z'' ; ''z'')&-: (''z'' equ 0) con (1 equ 0 fsh) fsh '''' '
+test_con =: 3 : 'assert. (, < ''z'' ; ''z'')&-: (''z'' equ 0) con (1 equ 0 fsh) (<_.) '
 
 test_peano =: 3 : '(<<''z''),(<(<''s'';1),<''z''),<(<''s'';1),(<''s'';2),<''z''&-: (5!:5)<''a'' [ a =. 3 cis peano'
 

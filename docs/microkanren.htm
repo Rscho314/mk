@@ -1,0 +1,155 @@
+<p>This script is an attempt at a mostly verbatim implementation of <a href="https://github.com/jasonhemann/microKanren-DLS-16">scheme microkanren</a>.<br />
+</p>
+<ul>
+<li>Trees are represented by nested boxed arrays.<br />
+</li>
+<li>Variables are integers and are considered in scope if lying between zero and the length of the state array.<br />
+</li>
+<li>Promises are boxed strings, and are forced by the <em>execute</em> verb (<code>".</code>).<br />
+</li>
+<li>The indeterminate value (<code>_.</code>) was chosen as initial value in the state array because of its limited usefulness in the J language, and to allow unification with the empty array (<code>''</code>). <code>_.</code> is therefore a marker of freshness of a variable.</li>
+</ul>
+<p><strong>CAUTION: there certainly are major bugs and misunderstandings in this, due to my inexpertise in both logic and J!</strong></p>
+<h2>Definitions</h2>
+<table class="map">
+<tr>
+<td class="key">
+A
+</td>
+<td>
+<a href="#apm">apm</a>, <a href="#app">app</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+C
+</td>
+<td>
+<a href="#cis">cis</a>, <a href="#con">con</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+D
+</td>
+<td>
+<a href="#dis">dis</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+E
+</td>
+<td>
+<a href="#equ">equ</a>, <a href="#ext">ext</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+F
+</td>
+<td>
+<a href="#fsh">fsh</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+G
+</td>
+<td>
+<a href="#get">get</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+O
+</td>
+<td>
+<a href="#occ">occ</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+P
+</td>
+<td>
+<a href="#pul">pul</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+T
+</td>
+<td>
+<a href="#tak">tak</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+U
+</td>
+<td>
+<a href="#uni">uni</a>
+</td>
+</tr>
+<tr>
+<td class="key">
+V
+</td>
+<td>
+<a href="#var">var</a>
+</td>
+</tr>
+</table>
+<h2 id="apm" class="hdef">apm (conjunction)</h2>
+<pre><code>scheme: $append-map</code></pre>
+<p>Works similarly to app. apm is a conjunction because it has to handle functions as arguments.</p>
+<h2 id="app" class="hdef">app (dyad)</h2>
+<pre><code>scheme: $append</code></pre>
+<p>Test x, and if a promise makes a new promise with reversed arguments (line 4). Otherwise appends and recurs (line 5). The depth of recursion is not too great, so it seems ok.</p>
+<h2 id="cis" class="hdef">cis (conjunction)</h2>
+<pre><code>scheme: call/initial-state</code></pre>
+<p>Notice the initial state is a boxed indeterminate value, in our case.</p>
+<h2 id="con" class="hdef">con (conjunction)</h2>
+<pre><code>scheme: conj</code></pre>
+<p>Conjunction.</p>
+<h2 id="dis" class="hdef">dis (conjunction)</h2>
+<pre><code>scheme: disj</code></pre>
+<p>Disjunction.</p>
+<h2 id="equ" class="hdef">equ (conjunction)</h2>
+<pre><code>scheme: ==
+example: 0 equ &#39;a&#39; (&lt;_.)</code></pre>
+<p>The equivalence constraint. u and v are values to be unified. y is the state array.</p>
+<h2 id="ext" class="hdef">ext (dyad)</h2>
+<pre><code>scheme: ext-s
+example: (&lt;_.) ext 0;&#39;a&#39;</code></pre>
+<p>If the pair of variables/values y to be unified holds identical elements, returns x immediately without change (line 1). Replaces the values of y by their substitutions according to x, and stores that in a (line 2). For unification to occur, the pair must 1.pass the occurs check and 2.the substituted values must be either identical to themselves (i.e. fresh variables) or identical to the values pointed to in the substitution (line 3). Unification then occurs by amending the positions pointed to in x by those in a. Of course, we should be able to do better than this circlejerk in the future.</p>
+<h2 id="fsh" class="hdef">fsh (adverb)</h2>
+<pre><code>scheme: call/fresh
+example: ] fsh &#39;&#39;</code></pre>
+<p>Introduces a new variable by extending the state array y with an indeterminate value.</p>
+<h2 id="get" class="hdef">get (dyad)</h2>
+<pre><code>scheme: find
+example: (_.;&#39;a&#39;) get 1</code></pre>
+<p>Walks the state x to find the substitution of y.<br />
+Tests whether the position y in x is <code>&lt;_.</code>. If <code>&lt;_.</code> is found or the verb fails, y is returned. Otherwise the y-th element is returned. Walking the state is done by executing until the result stops changing.</p>
+<h2 id="occ" class="hdef">occ (dyad)</h2>
+<pre><code>scheme: occurs?
+example: (&lt;2) occ &lt;&lt;2</code></pre>
+<p>Begins by flattening the y tree y, and checks for membership of x into the flattened list of boxes.</p>
+<h2 id="pul" class="hdef">pul (monad)</h2>
+<pre><code>scheme: pull</code></pre>
+<p>Test if y is a promise, and executes if that is the case. Otherwise, yields 0.</p>
+<h2 id="tak" class="hdef">tak (dyad)</h2>
+<pre><code>scheme: take</code></pre>
+<p>Transformed to the iterative form, since J does not have recursion facilities such as tail-call elimination (divides space complexity by ~3).</p>
+<h2 id="uni" class="hdef">uni (conjunction)</h2>
+<pre><code>scheme: unify
+example: 0 uni &#39;a&#39; (&lt;_.)
+bugs: 0 uni 1 (_.;0)</code></pre>
+<p>A tree is formed by combining u and v, for convenience (line 1). y is the state array. The two main branches are compared and we return immediately if they are found identical (line 2). The variable paths in the tree are then extracted in vp, by flattening the tree to a list of paths and filtering this list for variables not in scope, which are simply dropped with no error handling (line 3). Substitution paths are obtained in vs by negating the first element of each variable path (line 4). The tree of variable/substitution path is filtered for 1.substitution paths not lying in the initial tree by testing against all prefixes of the initial tree paths. This covers cases such as 0 uni (1;‘a’) (<code>_.;_.</code>) that would fail otherwise. 2. we eliminate paths differing only by their forst element to avoid failure in cases such as (0 uni 1 (<code>_.;0</code>)) (line 5). The variable/substitution tree is then checked for parity and non-emptiness (line 6). Finally, the state is updated by mapping the newly built paths into the original tree (line 7).</p>
+<h2 id="var" class="hdef">var (monad)</h2>
+<pre><code>scheme: var?
+example: var 3</code></pre>
+<p>This predicate test whether 1.the type is integer and 2.is not a vector.<br />
+</p>

@@ -1,0 +1,16 @@
+body {background-color: #ffffff; color: #000000}
+a:link    {color: #0066cc; text-decoration: none}
+a:visited {color: #0066cc; text-decoration: none}
+a:hover   {color: #ff0000; text-decoration: underline}
+h1 {font-size: large}
+h2 {font-size: medium}
+h3 {font-size: medium}
+h4 {font-size: medium}
+pre {background: #fff8ed; border: 1pt solid #aebdcc; padding: 5pt}
+.hdef {border: 1px solid #aebdcc;background-color: #e6e6fa;padding: 2pt}
+.rdef,.rid,.rtype {padding: 4px; border: 1px solid #aebdcc; border-collapse: collapse}
+.rdef,.rid {text-align: left;}
+.rtype {text-align: center;}
+.rid {background-color: #e6e6fa; font-weight: bold}
+table.rdef {margin-bottom: 1em}
+td.key {vertical-align:text-top}
