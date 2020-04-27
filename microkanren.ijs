@@ -1,42 +1,17 @@
 var =: (4 1 e.~ 3!:0) *. -.@#@$
 get =: ({::~^:(-.@(128!:5)@{::~)^:(var@]) :: ]) ^: _
 
-NB.occ =: 4 : '+./ (0:`((x {::~ ;~0) -: y&get)@.var"0 _) S: 0 x {::~ 0;1'
-
-NB.ext =: 4 : 0
-NB. x =. ((< y i. {:@> x) 1} ])^:((# y) > y i. {:) &.> x
-NB. (({: > x) (x {::~ ;~ 0) } ])`_1:@.(x&occ) y
-NB.)
-
-NB.uni =: 2 : 0
-NB. tree =. y&get &.> (u;<v)
-NB. if. -:/ tree do. y return. end.
-NB. vp =. (1&-:@((#y)&>^:var)S:0 # (<S:1)@{::) tree
-NB. vs =. (-.&.>@{. 0}])&.> vp
-NB. 'vs ss' =. (#~~:@:(}. &.>))~ &.> (vs e. ,@(<\ S: 1)@{::tree)&# &.> (vp;<vs)
-NB. if. (2&> +. {:@#:) # vs,ss do. _1 return. end.
-NB. y ext F.. ] _2 <\ ]@{::&tree &.> vs,@,.ss
-NB.)
-
 occ =: 4 : 0
- +./ (>x)&-: S:0 y
+ if. x -: y do. 0 return. end.
+ x e. < S:0 ;/y
 )
 
-NB. CONTINUE HERE
 ext =: 4 : 0
- y =. x&get &.> y
- NB.echo y
- NB.echo ({:y),:~((#x)&= x i. {: y) } (;/x i. {: y) ,: ({.y)
- y =. ({:y),:~((#x)&= x i. {: y) } (;/x i. {: y) ,: ({.y)
- if. +./ occ"0/ y do. _1 return. end.
- ({: y) (0 {:: y) } x
+ if. -:/ y do. x return. end.
+ a =. x&get L:0 y
+ if. (+./ occ"0/ a) +. (-. *./ (({:a)&= +. ({.y)&=) x&get &.> {.y) do. _1 return. end.
+  ({: a) (0 {:: y) } ,x
 )
-(0;1;2) uni ('a';'b';'c') (_. ; _. ; 'c')
-(0;1;2) uni ('a';0;'c') (_. ; _. ; 'c')
-(0;1;2) uni ('a';1;'c') (_. ; _. ; 'c')
-(0;1;2) uni ('a';'a';'c') (_. ; _. ; 'c')
-(0;1;2) uni ('a';2;'c') (_. ; _. ; 'c')
-(0;1;2) uni ('a';'b';'c') (_. ; _. ; 'd')
 
 uni =: 2 : 0
  tree =. y&get &.> (u;<v)
@@ -83,5 +58,4 @@ tak =: 4 : 0
 
 cis =: 2 : 'u tak (pul@v (<_.))'
 
-NB.(6!:2 , 7!:2) '10000 cis fives_and_sixes' NB.reference
-NB.(6!:2 , 7!:2) '10000 cis fivesit' NB.3 - 10X faster with 1/2 the memory
+NB.(6!:2 , 7!:2) '10000 cis fives_and_sixes'
