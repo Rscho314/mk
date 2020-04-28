@@ -15,6 +15,7 @@ Target=: jpath '~Projects/mk/docs'
 NB. source files under the source directory
 NB. (may be more than one level down)
 Files=: cutopen 0 : 0
+docs_microkanren.ijs
 microkanren.ijs
 )
 
