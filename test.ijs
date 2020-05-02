@@ -1,16 +1,15 @@
 load'~Projects/mk/microkanren.ijs'
 
-fives =: 3 : 0
- ((,5) equ (<:#y)) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
+fives =: 3 :0
+ ((,5) equ (<:#y)) dis (3 :'<((,<''fives'');(<(<,''0''),<y))') y
 )
-sixes =: 3 : 0
- ((,6) equ (<:#y)) dis (3 : '<''sixes ('' , ((5!:5) <''y'') , '')''') y
+sixes =: 3 :0
+ ((,6) equ (<:#y)) dis (3 :'<((,<''sixes'');(<(<,''0''),<y))') y
 )
-
-fives_and_sixes =: 3 : 'fives dis sixes y'
+fives_and_sixes =: 3 :'fives dis sixes y'
 
 peano =: 3 : 0
- (3 :'''z'' equ (<:#y) y') dis ((3 :'(2-~#y) equ (''s'';<:@#y) y') con (3 : '<''peano ('',((5!:5)<''y''),'')''') fsh) y
+ (3 :'''z'' equ (<:#y) y') dis ((3 :'(2-~#y) equ (''s'';<:@#y) y') con (3 :'<((,<''peano'');(<(<,''0''),<y))') fsh) y
 )
 
 test_var_bnat =: 3 : 'assert. 0&= var < 2'
@@ -76,7 +75,7 @@ test_infinite_stream_interleave =: 3 : 'assert. ((<,<,6),(<,<,5),(<,<,6),(<,<,5)
 
 test_con =: 3 : 'assert. (, < ''z'' ; ''z'')&-: (''z'' equ 0) con (1 equ 0 fsh) (<_.) '
 
-test_peano =: 3 : '(<<''z''),(<(<''s'';1),<''z''),<(<''s'';1),(<''s'';2),<''z''&-: (5!:5)<''a'' [ a =. 3 cis peano'
+NB.test_peano =: 3 : 'assert. (<(<''s'';01),(<''s'';2),<''z''),(<(<''s'';01),<''z''),<,<''z'' -: (5!:5)<''a'' [ a =. 3 cis peano'
 
 test_additional_1 =: 3 :'assert. (''a'';''b'';''c'')-:(''a'';1;2) uni (0;''b''; 2) (_. ; _. ; ''c'')'
 test_additional_2 =: 3 :'assert. (''a'';''b'';''c'')-:(0;1;2) uni (''a'';''b''; 2) (_. ; _. ; ''c'')'

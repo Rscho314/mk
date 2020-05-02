@@ -28,11 +28,13 @@ equ =: 2 : '<(y get u) uni (y get v) y'
 
 fsh =: 1 : 'u (<_.) ,~ y'
 
+promise =: 3 :'0 < +./ 0:`((4!:0 :: 0) S: 1)@.(1 = #) y'
+
 app =: 4 : 0
  if. x -: ''
   do. y
- elseif. 2&=@(3!:0)@> x
-  do. < '(' , ((5!:5)<'y') , ') app ((3 :' , ((5!:5)<'a') , ')'''')' [ a =.0{::x
+ elseif. promise > x
+  do. <(<(<,'0'),<y) ; (,<'app') ;< (<(<,'0'),<((_1 {:: x)`:6))
  elseif. do. ({.x) , (}.x) app y
  end.
 )
@@ -40,8 +42,8 @@ app =: 4 : 0
 apm =: 2 : 0
  if. u -: ''
   do. ''
- elseif. 2&=@(3!:0)@> u
-  do. < '((3 :' , ((5!:5)<'a') , ')'''') apm (' , ((5!:5)<'v') , ')' [ a =.0{::u
+ elseif. promise > u
+  do. <(<(<,'0'),<((_1 {:: u)`:6)) ; (,<'app') ;< (<(<,'0'),<v)
  elseif. do. (v (0 {:: u)) app ((}.u) apm v)
  end.
 )
@@ -50,14 +52,19 @@ dis =: 2 : '(u y) app (v y)'
 
 con =: 2 : '(u y) apm v'
 
-pul =: (".@>)^:(0:`(2&=@(3!:0)@>)@.(1 = #))
+pul =: 3 : 0
+ if. promise y
+  do. (> y)`:6
+ else. y
+ end.
+)
 
 tak =: 4 : 0
  acc =. ''
  while. (x > 0) *. (y -.@-: '')
-  do. 'x y acc' =. (<: x);(pul@{: y);<(acc,~{.y)
+  do. 'x y acc' =. (<: x);(pul {: y);<(acc,~{.y)
  end.
  acc
 )
 
-cis =: 2 : 'u tak (pul@v (<_.))'
+cis =: 2 : 'u tak pul v <_.'
