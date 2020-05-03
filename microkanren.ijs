@@ -31,19 +31,20 @@ fsh =: 1 : 'u (<_.) ,~ y'
 promise =: 3 :'0 < +./ 0:`((4!:0 :: 0) S: 1)@.(1 = #) y'
 
 app =: 4 : 0
- if. x -: ''
-  do. y
- elseif. promise > x
-  do. <(<(<,'0'),<y) ; (,<'app') ;< (<(<,'0'),<((_1 {:: x)`:6))
- elseif. do. ({.x) , (}.x) app y
+ while. x -.@-: ''
+  do. if. promise > x
+       do. ((_2 }. y) , <(<(<,'0'),<(_2 {. y)) ; (,<'app') ;< (<(<,'0'),<((_1 {:: x)`:6))) return.
+      else. 'x y' =. (}. x) ;< (y ,~ {. x)
+      end.
  end.
+ y
 )
 
 apm =: 2 : 0
  if. u -: ''
   do. ''
  elseif. promise > u
-  do. <(<(<,'0'),<((_1 {:: u)`:6)) ; (,<'app') ;< (<(<,'0'),<v)
+  do. <(<(<,'0'),<((_1 {:: u)`:6)) ; (,<'apm') ;< (<(<,'0'),<v) NB.NEVER TESTED!!
  elseif. do. (v (0 {:: u)) app ((}.u) apm v)
  end.
 )
