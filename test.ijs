@@ -72,7 +72,7 @@ uni_scope_expect =: 'domain error'
 test_uni_scope =: 3 : '0 uni 1 (,<_.)'
 
 test_infinite_stream_dfs =: 3 : 'assert. (4 # <,<,5)&-: 4 cis fives'
-test_infinite_stream_interleave =: 3 : 'assert. ((<,<,6),(<,<,5),(<,<,6),(<,<,5))&-: 4 cis fives_and_sixes'
+test_infinite_stream_interleave =: 3 : 'assert. ((<,<,5),(<,<,6),(<,<,5),<,<,6)&-: 4 cis fives_and_sixes'
 
 test_con =: 3 : 'assert. (, < ''z'' ; ''z'')&-: (''z'' equ 0) con (1 equ 0 fsh) (<_.) '
 
