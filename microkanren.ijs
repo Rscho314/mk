@@ -4,11 +4,10 @@ occ =: (e. < S: 0)`0:@.-:
 
 ext =: 4 : 0
  a =. x&get L:0 y
- if. 1&e. occ/"1 a do. _1 return. end.
+ if. 1&e. (occ/"1 a) , (~:/"1 a)&*. +:/@;"1 var &.> a do. _1 return. end.
  ({:"1 y) (0&{::"1 y) } x
 )
 
-NB. boxed/unboxed cases must be treated separately
 uni =: 2 : 0
  if. u -: v do. y return. end.  NB.identity check
  'chku chkv' =. ,@(0:`((#y)&<:)@.var)"0 S:0 &.> u ;< v NB.scope check
@@ -18,35 +17,22 @@ uni =: 2 : 0
  u =. , <"lr u
  v =. , <"rr v
  if. (#u) ~: #v do. 'error: incompatible shape' return. end.
+ paths =. (<S:1)@{:: u ;< v NB.now unify with rank 0 0
+ vsp =. var S:0 u ;< v
+ vp =. vsp # paths
+ sp =. ((-. &.>@{.) 0} ]) &.> vp
+ fp =. sp e. ; <\ &.> paths
+ if. -. +./ fp do. _1 return. end.
+ t =. ~. {::&(u;<v) L:1 fp # vp ,. sp
  NB.remove from ext input 1.if = by col 2.if = by row 3.if = by reversed row
- ft =. (((_2%~#) {. ~:)@(|."1 , ]) # ]) ~. (u ~: v)&# u ,. v
+ ft =. ((i."1&1 > i.@{.@$)@(<"1 -:"0/ <"1@|."1) # ]) (~:/"1 # ]) t NB.should this really not create cycles?
  if. 1&e. +:/"1 var@> ft do. _1 return. end. NB.@ this point, if pair of values they don't unify
- y ext (\:"1 var@> ft) {"1 ft
-)
-
-NB.(_ _) (,2)uni(,2) (3#<_.)
-NB.(1 0) (27 3 $ a. { ~ 35 + i. 81) uni (i. 27) 27 # <_.
-NB.(<0) uni (<1) (2#<_.)
-
-NB.(_ _) ('a' ; < < ('c' ; 0)) uni ('b' ; < < (1 ; 'd')) (_. ; _.)
-NB.(_ _) 0 uni (3 3 3 3 $ >: i. 81) 82 # <_.
-NB.(1 1) (27 3 $ a. { ~ 35 + i. 81) uni (3 3 3 3 $ i. 81) 81 # <_.
-NB.(1 1) (27 3 $ ;/ a. { ~ 35 + i. 81) uni (3 3 3 3 $ ;/ i. 81) 81 # <_.
-NB.(1 0) (27 3 $ a. { ~ 35 + i. 81) uni (;/ i. 27) 27 # <_.
-NB.0 uni (3 3 3 3 $ >: i.81) 82 # <_.
-
-(0 : 0)
-We could probably make a special case where this
-(3 3 3 $ ;/ a. {~ 97+i.27) equ (3 3 3 $ ;/ i.27) 27#<_.
-could be done unboxed like this
-(3 3 3 $ a. {~ 97+i.27) equ (3 3 3 $ i.27) 27#<_.
-since 'if.' testing for 32&=@(3!:0) on u & v returning 0
-means that the terms a) are not nested b) are of uniform type
-so we could make a special code path for it.
+ y&ext (\:"1 var@> ft) {"1 ft
 )
 
 equ =: 2 : 0
- if. -. x do. x =. _ _ else. end.
+ < (_ _) (y get u) uni (y get v) y
+:
  < x (y get u) uni (y get v) y
 )
 
