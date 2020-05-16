@@ -3,11 +3,11 @@
 <ul>
 <li>Trees are represented by nested boxed arrays.<br />
 </li>
-<li>Variables are integers and are considered in scope if lying between zero and the length of the state array.<br />
+<li>Variables are integers and are considered in scope if lying between zero and 1-length of the state array.<br />
 </li>
 <li>Promises are boxed strings, and are forced by the <em>execute</em> verb (<code>".</code>).<br />
 </li>
-<li>The indeterminate value (<code>_.</code>) was chosen as initial value in the state array because of its limited usefulness in the J language, and to allow unification with the empty array (<code>''</code>). <code>_.</code> is therefore a marker of freshness of a variable.</li>
+<li>The indeterminate value (<code>_.</code>) was chosen as initial value in the state array because of its limited usefulness in the J language, and to allow unification with the empty array (<code>''</code>). <code>_.</code> is therefore a marker of the freshness of a variable.</li>
 </ul>
 <p><strong>CAUTION: there certainly are major bugs and misunderstandings in this, due to my inexpertise in both logic and J!</strong></p>
 <h2>Definitions</h2>
@@ -70,22 +70,6 @@ O
 </tr>
 <tr>
 <td class="key">
-P
-</td>
-<td>
-<a href="#pul">pul</a>
-</td>
-</tr>
-<tr>
-<td class="key">
-T
-</td>
-<td>
-<a href="#tak">tak</a>
-</td>
-</tr>
-<tr>
-<td class="key">
 U
 </td>
 <td>
@@ -103,13 +87,13 @@ V
 </table>
 <h2 id="apm" class="hdef">apm (conjunction)</h2>
 <pre><code>scheme: $append-map</code></pre>
-<p>Works similarly to app. apm is a conjunction because it has to handle functions as arguments.</p>
+<p>Works similarly to app. apm is a conjunction only because it has to handle functions as arguments.</p>
 <h2 id="app" class="hdef">app (dyad)</h2>
 <pre><code>scheme: $append</code></pre>
-<p>Test x, and if a promise makes a new promise with reversed arguments (line 4). Otherwise appends and recurs (line 5). The depth of recursion is not too great, so it seems ok.</p>
+<p>Test x, and if a promise makes a new promise with reversed arguments (line 4). Otherwise appends and recurs (line 5). The depth of recursion is usually not too great, so it seems ok.</p>
 <h2 id="cis" class="hdef">cis (conjunction)</h2>
 <pre><code>scheme: call/initial-state</code></pre>
-<p>Notice the initial state is a boxed indeterminate value, in our case.</p>
+<p>Notice the initial state is a boxed indeterminate value, in our case. We ‘fold’ over the initial promise a user-defined number of times. Since this actually does not map over a sequence but only produces one as we go, this is more akin to a loop.</p>
 <h2 id="con" class="hdef">con (conjunction)</h2>
 <pre><code>scheme: conj</code></pre>
 <p>Conjunction.</p>
@@ -119,11 +103,11 @@ V
 <h2 id="equ" class="hdef">equ (conjunction)</h2>
 <pre><code>scheme: ==
 example: 0 equ &#39;a&#39; (&lt;_.)</code></pre>
-<p>The equivalence constraint. u and v are values to be unified. y is the state array.</p>
+<p>The equivalence constraint. u and v are values to be unified. y is the state array. All constraints must define an optional default rank in x.</p>
 <h2 id="ext" class="hdef">ext (dyad)</h2>
 <pre><code>scheme: ext-s
 example: (&lt;_.) ext 0;&#39;a&#39;</code></pre>
-<p>If the pair of variables/values y to be unified holds identical elements, returns x immediately without change (line 1). Replaces the values of y by their substitutions according to x, and stores that in a (line 2). For unification to occur, the pair must 1.pass the occurs check and 2.the substituted values must be either identical to themselves (i.e. fresh variables) or identical to the values pointed to in the substitution (line 3). Unification then occurs by amending the positions pointed to in x by those in a. Of course, we should be able to do better than this circlejerk in the future.</p>
+<p>Replaces the values of y by their substitutions according to x, and stores that in a. For unification to occur, the pair must 1.pass the occurs check and 2.the substituted values must be either identical to themselves (i.e. fresh variables) or identical to the values pointed to in the substitution. Unification then occurs by amending the positions pointed to in x by those in a.</p>
 <h2 id="fsh" class="hdef">fsh (adverb)</h2>
 <pre><code>scheme: call/fresh
 example: ] fsh &#39;&#39;</code></pre>
@@ -136,20 +120,13 @@ Tests whether the position y in x is <code>&lt;_.</code>. If <code>&lt;_.</code>
 <h2 id="occ" class="hdef">occ (dyad)</h2>
 <pre><code>scheme: occurs?
 example: (&lt;2) occ &lt;&lt;2</code></pre>
-<p>Begins by flattening the y tree y, and checks for membership of x into the flattened list of boxes.</p>
-<h2 id="pul" class="hdef">pul (monad)</h2>
-<pre><code>scheme: pull</code></pre>
-<p>Test if y is a promise, and executes if that is the case. Otherwise, yields 0.</p>
-<h2 id="tak" class="hdef">tak (dyad)</h2>
-<pre><code>scheme: take</code></pre>
-<p>Transformed to the iterative form, since J does not have recursion facilities such as tail-call elimination (divides space complexity by ~3).</p>
+<p>Tests x &amp; y for identity, and returns zero in that case. If x &amp; y are different, we flatten the tree y to a list of leaves and check for x membership in the flattened tree.</p>
 <h2 id="uni" class="hdef">uni (conjunction)</h2>
 <pre><code>scheme: unify
-example: 0 uni &#39;a&#39; (&lt;_.)
-bugs: 0 uni 1 (_.;0)</code></pre>
-<p>A tree is formed by combining u and v, for convenience (line 1). y is the state array. The two main branches are compared and we return immediately if they are found identical (line 2). The variable paths in the tree are then extracted in vp, by flattening the tree to a list of paths and filtering this list for variables not in scope, which are simply dropped with no error handling (line 3). Substitution paths are obtained in vs by negating the first element of each variable path (line 4). The tree of variable/substitution path is filtered for 1.substitution paths not lying in the initial tree by testing against all prefixes of the initial tree paths. This covers cases such as 0 uni (1;‘a’) (<code>_.;_.</code>) that would fail otherwise. 2. we eliminate paths differing only by their forst element to avoid failure in cases such as (0 uni 1 (<code>_.;0</code>)) (line 5). The variable/substitution tree is then checked for parity and non-emptiness (line 6). Finally, the state is updated by mapping the newly built paths into the original tree (line 7).</p>
+example: (_ _) 0 uni &#39;a&#39; (&lt;_.)</code></pre>
+<p>We test u &amp; v for identity, and return the substitution y unchanged if true. We then check that all variables in the terms to be unified are in scope by flattening the tree and comparing to the length of y. Rank polymorphism is then achieved by splitting the terms according to the desired left and right ranks given in x. We map the tree in paths to obtain a list of paths, and then filter the variable paths into vp. Substitution paths are obtained in vs by negating the first element of each variable path. We check that all substitution paths are present in the paths in fp by checking for membership in all prefixes of the path list. We rearrange into 2 columns with variables on the left, and values to be unified on the right. Rows of the table t are then filtered to eliminate identical values and cycles in ft. Finally, the state is updated.</p>
 <h2 id="var" class="hdef">var (monad)</h2>
 <pre><code>scheme: var?
 example: var 3</code></pre>
-<p>This predicate test whether 1.the type is integer and 2.is not a vector.<br />
+<p>This predicate test whether y is of type integer and is not a vector.<br />
 </p>

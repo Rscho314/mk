@@ -9,24 +9,22 @@ ext =: 4 : 0
 )
 
 uni =: 2 : 0
- if. u -: v do. y return. end.  NB.identity check
- 'chku chkv' =. ,@(0:`((#y)&<:)@.var)"0 S:0 &.> u ;< v NB.scope check
- if. +./ chku , chkv do. 'error: variable out-of-scope' return. end.
- NB.reshape on rank
+ if. u -: v do. y return. end.
+ 'chku chkv' =. ,@(0:`((#y)&<:)@.var)"0 S:0 &.> u ;< v
+ if. +./ chku , chkv do. _1 return. end.
  'lr rr' =. x
  u =. , <"lr u
  v =. , <"rr v
- if. (#u) ~: #v do. 'error: incompatible shape' return. end.
- paths =. (<S:1)@{:: u ;< v NB.now unify with rank 0 0
+ if. (#u) ~: #v do. _1 return. end.
+ paths =. (<S:1)@{:: u ;< v
  vsp =. var S:0 u ;< v
  vp =. vsp # paths
  sp =. ((-. &.>@{.) 0} ]) &.> vp
  fp =. sp e. ; <\ &.> paths
  if. -. +./ fp do. _1 return. end.
  t =. ~. {::&(u;<v) L:1 fp # vp ,. sp
- NB.remove from ext input 1.if = by col 2.if = by row 3.if = by reversed row
- ft =. ((i."1&1 > i.@{.@$)@(<"1 -:"0/ <"1@|."1) # ]) (~:/"1 # ]) t NB.should this really not create cycles?
- if. 1&e. +:/"1 var@> ft do. _1 return. end. NB.@ this point, if pair of values they don't unify
+ ft =. ((i."1&1 > i.@{.@$)@(<"1 -:"0/ <"1@|."1) # ]) (~:/"1 # ]) t
+ if. 1&e. +:/"1 var@> ft do. _1 return. end.
  y&ext (\:"1 var@> ft) {"1 ft
 )
 
