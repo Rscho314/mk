@@ -44,12 +44,12 @@ NB.test_occ_nested_walk =: 3 : 'assert. (< 2 ; < (3 ; (< < (4 ; 3)) ; 4)) occ (_
 
 test_ext_empty =: 3 : 'assert. ''_.;_.;3''&-: ((5!:5) < ''a'') [ a =. (_. ; _. ; _.) ext (2 ; 3)'
 test_ext_append =: 3 : 'assert. ''_.;_.;_.;_.;5''&-: ((5!:5) < ''a'') [ a =. (_. ; _. ; _. ; _. ; _.) ext (4 ; 5)'
-test_ext_equal_nonvar =: 3 : 'assert. ''_.;_.;_.''&-: ((5!:5) < ''a'') [ a =. (_. ; _. ; _.) ext ((,2);,2)'
-test_ext_equal_var =: 3 : 'assert. ''_.;_.;_.''&-: ((5!:5) < ''a'') [ a =. (_. ; _. ; _.) ext (2;2)'
+NB.test_ext_equal_nonvar =: 3 : 'assert. ''_.;_.;_.''&-: ((5!:5) < ''a'') [ a =. (_. ; _. ; _.) ext ((,2);,2)'
+NB.test_ext_equal_var =: 3 : 'assert. ''_.;_.;_.''&-: ((5!:5) < ''a'') [ a =. (_. ; _. ; _.) ext (2;2)'
 test_ext_occ =: 3 : 'assert. _1&-: (_. ; _. ; _.) ext (2 ; < < 2)'
-test_ext_same =: 3 : 'assert. ''_.;_.;_.''&-: ((5!:5) < ''a'') [ a =. (_. ; _. ; _.) ext ((<2); < < 2)'
+NB.test_ext_same =: 3 : 'assert. ''_.;_.;_.''&-: ((5!:5) < ''a'') [ a =. (_. ; _. ; _.) ext ((<2); < < 2)'
 NB.test_ext_avoid_duplicate =: 3 : 'assert. ''_.;_.;''''z'''';2''&-: ((5!:5) < ''a'') [ a =.  (_. ; _. ; ''z'' ; _.) ext (3 ; ''z'')'
-test_ext_no_path_compression =: 3 : 'assert. ''_.;_.;''''z'''';2;''''z''''''&-: ((5!:5) < ''a'') [ a =.  (_. ; _. ; ''z'' ; 2 ; _.) ext (4 ; 2)'
+test_ext_no_path_compression =: 3 : 'assert. ''_.;_.;''''z'''';2;2''&-: ((5!:5) < ''a'') [ a =.  (_. ; _. ; ''z'' ; 2 ; _.) ext (4 ; 2)'
 
 test_uni_null_null =: 3 : 'assert. ''''&-: '''' uni '''' '''' '
 test_uni_bnull_bnull =: 3 : 'assert. ''''&-: (< '''') uni (< '''') '''' '

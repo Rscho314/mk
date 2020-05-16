@@ -32,3 +32,4 @@ NB. copy the css file to the Target directory
 
 NB. make the docs
 makedocs''
+echo 'building documentation'

@@ -1,6 +1,8 @@
 load'general/unittest'
 load 'jpm'
 
+load'~Projects/mk/docs.ijs'
+
 test =: 3 : 0
  f =. 'var get occ ext uni equ fsh app apm dis con pul tak cis'
  pt =. jpath '~Projects/mk/test.ijs'

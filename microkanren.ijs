@@ -1,29 +1,55 @@
 var =: (4 1 e.~ 3!:0) *. -.@#@$
 get =: (([:^:(128!:5))@{::~^:(var@:]) :: ]) ^: _
-
-occ =: 4 : 0
- if. x -: y do. 0 return. end.
- x e. < S:0 y
-)
+occ =: (e. < S: 0)`0:@.-:
 
 ext =: 4 : 0
- if. -:/ y do. x return. end.
  a =. x&get L:0 y
- if. 1 (e. ,) (-.@-:)`occ@.(var@>@[)"0/ a do. _1 return. end.
- ({: a) (0 {:: y) } ,x
+ if. 1&e. occ/"1 a do. _1 return. end.
+ ({:"1 y) (0&{::"1 y) } x
 )
 
+NB. boxed/unboxed cases must be treated separately
 uni =: 2 : 0
- tree =. (u;<v)
- if. -:/ tree do. y return. end.
- vp =. (1&-:@((#y)&>^:var)S:0 # (<S:1)@{::) tree
- vs =. (-.&.>@{. 0}])&.> vp
- 'vs ss' =. (#~~:@:(}. &.>))~ &.> (vs (e. ,) (<\ S: 1) {::tree)&# &.> (vp;<vs)
- if. (2&> +. {:@#:) # vs,ss do. _1 return. end.
- y ext (tree{::~]) &.> vs,:ss
+ if. u -: v do. y return. end.  NB.identity check
+ 'chku chkv' =. ,@(0:`((#y)&<:)@.var)"0 S:0 &.> u ;< v NB.scope check
+ if. +./ chku , chkv do. 'error: variable out-of-scope' return. end.
+ NB.reshape on rank
+ 'lr rr' =. x
+ u =. , <"lr u
+ v =. , <"rr v
+ if. (#u) ~: #v do. 'error: incompatible shape' return. end.
+ NB.remove from ext input 1.if = by col 2.if = by row 3.if = by reversed row
+ ft =. (((_2%~#) {. ~:)@(|."1 , ]) # ]) ~. (u ~: v)&# u ,. v
+ if. 1&e. +:/"1 var@> ft do. _1 return. end. NB.@ this point, if pair of values they don't unify
+ y ext (\:"1 var@> ft) {"1 ft
 )
 
-equ =: 2 : '<(y get u) uni (y get v) y'
+NB.(_ _) (,2)uni(,2) (3#<_.)
+NB.(1 0) (27 3 $ a. { ~ 35 + i. 81) uni (i. 27) 27 # <_.
+NB.(<0) uni (<1) (2#<_.)
+
+NB.(_ _) ('a' ; < < ('c' ; 0)) uni ('b' ; < < (1 ; 'd')) (_. ; _.)
+NB.(_ _) 0 uni (3 3 3 3 $ >: i. 81) 82 # <_.
+NB.(1 1) (27 3 $ a. { ~ 35 + i. 81) uni (3 3 3 3 $ i. 81) 81 # <_.
+NB.(1 1) (27 3 $ ;/ a. { ~ 35 + i. 81) uni (3 3 3 3 $ ;/ i. 81) 81 # <_.
+NB.(1 0) (27 3 $ a. { ~ 35 + i. 81) uni (;/ i. 27) 27 # <_.
+NB.0 uni (3 3 3 3 $ >: i.81) 82 # <_.
+
+(0 : 0)
+We could probably make a special case where this
+(3 3 3 $ ;/ a. {~ 97+i.27) equ (3 3 3 $ ;/ i.27) 27#<_.
+could be done unboxed like this
+(3 3 3 $ a. {~ 97+i.27) equ (3 3 3 $ i.27) 27#<_.
+since 'if.' testing for 32&=@(3!:0) on u & v returning 0
+means that the terms a) are not nested b) are of uniform type
+so we could make a special code path for it.
+)
+
+equ =: 2 : 0
+ if. -. x do. x =. _ _ else. end.
+ < x (y get u) uni (y get v) y
+)
+
 fsh =: 1 : 'u (<_.) ,~ y'
 
 app =: 4 : 0
