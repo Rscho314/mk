@@ -10,7 +10,7 @@ sixes =: 3 : 0
 fives_and_sixes =: 3 : 'fives dis sixes y'
 
 peano =: 3 : 0
- (3 :'''z'' equ (<:#y) y') dis ((3 :'(2-~#y) equ (''s'';<:@#y) y') con (3 : '<''peano ('',((5!:5)<''y''),'')''') fsh) y
+ (3 :'''z'' equ (<:#y) y') dis ((3 :'(2-~#y) equ (''s'';<:@#y) y') con (3 : '<''peano ('',((5!:5)<''y''),'')''')@fsh) y
 )
 
 test_var_bnat =: 3 : 'assert. 0&= var < 2'
@@ -73,8 +73,8 @@ test_uni_scope =: 3 : '0 uni 1 (,<_.)'
 test_infinite_stream_dfs =: 3 : 'assert. (4 # <<5.)&-: 4 cis fives'
 test_infinite_stream_interleave =: 3 : 'assert. ((<<5.),(<<6.),(<<5.),<<6.)&-: 4 cis fives_and_sixes'
 
-test_con1 =: 3 : 'assert. (, < ''z'' ; ''z'')&-: (''z'' equ 0) con (1 equ 0 fsh) (<_.)'
-test_con2 =: 3 : 'assert. (, < ''z'' ; ''z'')&-: ((0 0) ''z'' equ 0 ]) con ((0 0) 1 equ 0 ]fsh) (<_.)'
+test_con1 =: 3 : 'assert. (, < ''z'' ; ''z'')&-: (''z'' equ 0) con (1 equ 0)@fsh (<_.)'
+test_con2 =: 3 : 'assert. (, < ''z'' ; ''z'')&-: ((0 0) ''z'' equ 0 ]) con ((0 0) 1 equ 0 fsh@]) <_.'
 
 test_peano =: 3 : '(<<''z''),(<(<''s'';1),<''z''),<(<''s'';1),(<''s'';2),<''z''&-: (5!:5)<''a'' [ a =. 3 cis peano'
 
