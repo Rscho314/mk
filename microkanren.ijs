@@ -57,38 +57,51 @@ apm =: 2 : 0
 dis =: 2 : '(u y) app (v y)'
 con =: 2 : '(u y) apm v'
 
-cis =: 2 : 0
- 'initval initprom' =. v <_.
- cishlp =. (".@(1&{::) , (<: &.>@{:)) [ _2&Z:@-.@*@(2&{::)
- initval ; cishlp F: {. _ ; initprom ; < <: u
-)
-
-NB. SYNTAX SUGAR=======================================================
-bpro =: 4 : '<"0@(x get~ ]) &.> y' NB.must enhance to reify subtrees & reject out-of-scope!
-upro =: 4 : '(x get~ ]) &.> y' NB.must enhance to reify subtrees & reject out-of-scope!
 run =: 2 : 0
- 'box runs vars' =. u
- if. box
-  do. vars bpro runs cis v
- else. vars upro runs cis v
+ if. u > 1
+  do. 'initval initprom' =. v y
+      runhlp =. (".@(1&{::) , (<: &.>@{:)) [ _2&Z:@-.@*@(2&{::)
+      initval ; ground &.> runhlp F: {. _ ; initprom ; < <: u
+ elseif. u = 1 do. {. v y
+ elseif. u = 0 do. ''
+ elseif. do. _1
+ end.
+:
+ if. u > 1
+  do. 'initval initprom' =. v y
+      runhlp =. (".@(1&{::) , (<: &.>@{:)) [ _2&Z:@-.@*@(2&{::)
+      (x&{ &.> initval) ; (x&{@ground &.>) runhlp F: {. _ ; initprom ; < <: u
+ elseif. u = 1 do. {. v y
+ elseif. u = 0 do. ''
+ elseif. do. _1
  end.
 )
 
-(0 : 0)
-perhaps a dyadic form of cis could be used for run variable scoping instead of (u/b)pro??
-)
+ground =: 3 : '(y&get^:var L:0)^:_ y'
 
-NB.(0 15 25 ,. 2 6 10) upro (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh ''
-NB.(0 15 25 ,. 2 6 10) bpro (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh ''
-NB.26 27 upro (1 0) (4 5 6 10 ,: 7 8 9 12) equ (26 27) 2&fsh@> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh ''
-NB.26 27 bpro (1 0) (4 5 6 10 ,: 7 8 9 12) equ (26 27) 2&fsh@> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh ''
+NB. SYNTAX SUGAR=======================================================
+ini =: < _.
+bpro =: 4 : 'ground@(x&{) > y'
+upro =: 4 : 'ground@>@(x&{) > y'
 
-NB.(0 4 0) run peano NB.INCOMPLETE, does not reify subtrees!
-NB.(0 5 0) run fives_and_sixes NB.OK
-NB.(1 5 0) run fives_and_sixes NB.OK
-NB.(1 5 1) run fives_and_sixes NB.WRONG, out-of-scope
-NB.0 upro 5 cis fives_and_sixes NB.OK
-NB.1 upro 5 cis fives_and_sixes NB.WRONG, out-of-scope
+4 run peano ini NB.OK
+(0) 4 run fives_and_sixes ini NB.OK
+(0) 4 run peano ini NB.OK
+
+(0 15 25 ,. 2 6 10) upro (ini 2}]) &.> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.fails, OK
+NB.here, grounding should fail & yield the variable!
+(0 15 25 ,. 2 6 10) bpro (ini 2}]) &.> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB._. should be '2'
+(0 15 25 ,. 2 6 10) upro (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.OK
+(0 15 25 ,. 2 6 10) bpro (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.OK
+26 27 upro (1 0) (4 5 6 10 ,: 7 8 9 12) equ (26 27) 2&fsh@> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.OK
+26 27 bpro (1 0) (4 5 6 10 ,: 7 8 9 12) equ (26 27) 2&fsh@> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.OK
+
+0 upro 5 run fives_and_sixes ini NB.OK
+1 upro 5 run fives_and_sixes ini NB.OK
+0 bpro 5 run fives_and_sixes ini NB.OK
+1 bpro 5 run fives_and_sixes ini NB.OK
+(0) 5 run fives_and_sixes ini NB.OK
+(1) 5 run fives_and_sixes ini NB.fails, OK
 
 NB.start_jpm_''
 NB.10 cis peano

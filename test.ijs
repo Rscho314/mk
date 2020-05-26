@@ -70,13 +70,13 @@ test_uni_subtree_var =: 3 : 'assert. ''(<1;''''b''''),<_.''&-: ((5!:5) < ''a'') 
 uni_scope_expect =: 'domain error'
 test_uni_scope =: 3 : '0 uni 1 (,<_.)'
 
-test_infinite_stream_dfs =: 3 : 'assert. (4 # <<5.)&-: 4 cis fives'
-test_infinite_stream_interleave =: 3 : 'assert. ((<<5.),(<<6.),(<<5.),<<6.)&-: 4 cis fives_and_sixes'
+test_infinite_stream_dfs =: 3 : 'assert. (4 # <<5.)&-: 4 run fives ini'
+test_infinite_stream_interleave =: 3 : 'assert. ((<<5.),(<<6.),(<<5.),<<6.)&-: 4 run fives_and_sixes ini'
 
 test_con1 =: 3 : 'assert. (, < ''z'' ; ''z'')&-: (''z'' equ 0) con (1 equ 0)@fsh (<_.)'
 test_con2 =: 3 : 'assert. (, < ''z'' ; ''z'')&-: ((0 0) ''z'' equ 0 ]) con ((0 0) 1 equ 0 fsh@]) <_.'
 
-test_peano =: 3 : '(<<''z''),(<(<''s'';1),<''z''),<(<''s'';1),(<''s'';2),<''z''&-: (5!:5)<''a'' [ a =. 3 cis peano'
+test_peano =: 3 : '(<<''z''),(<(<''s'';1),<''z''),<(<''s'';1),(<''s'';2),<''z''&-: (5!:5)<''a'' [ a =. 3 run peano ini'
 
 test_additional_1 =: 3 :'assert. (''a'';''b'';''c'')-:(0 0) (''a'';1;2) uni (0;''b''; 2) (_. ; _. ; ''c'')'
 test_additional_2 =: 3 :'assert. (''a'';''b'';''c'')-:(0 0) (0;1;2) uni (''a'';''b''; 2) (_. ; _. ; ''c'')'
