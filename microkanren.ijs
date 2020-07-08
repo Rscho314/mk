@@ -18,7 +18,6 @@ while. 1
   else. break.
   end.
 end.
-NB.perform cycle elimination!
 if. '' -.@-: , y do. ({:"1 y) (>@{."1 y) } x  else. x end. NB.insert remaining free vars
 )
 
@@ -50,72 +49,89 @@ uni =: 2 : 0
 equ =: 2 : 0
  (_ _) u equ v y
 :
- x (y get u) uni (y get v) y
+ < x (y get u) uni (y get v) y
 )
 
 ini =: ''
 fsh =: ,<@#
 
-NB.app =: 4 : 0
-NB. if. x -: ''
-NB.  do. y
-NB. elseif. 2&=@(3!:0)@> x
-NB.  do. < '(' , ((5!:5)<'y') , ') app ((3 :' , (quote 0 {:: x) , ')'''')'
-NB. elseif. do. ({. , (y app~ }.)) x
-NB. end.
-NB.)
+app =: 4 : 0
+ if. x -: ''
+  do. y
+ elseif. 2&=@(3!:0)@> x
+  do. < '(' , ((5!:5)<'y') , ') app ((3 :' , (quote 0 {:: x) , ')'''')'
+ elseif. do. ({. , (y app~ }.)) x
+ end.
+)
 
-NB.apm =: 2 : 0
-NB. if. u -: ''
-NB.  do. ''
-NB. elseif. 2&=@(3!:0)@> u
-NB.  do. < '((3 :' , (quote@> u) , ')'''') apm (' , ((5!:5)<'v') , ')'
-NB. elseif. do. (v (>u)) app (}.u) apm v
-NB. end.
-NB.)
+apm =: 2 : 0
+ if. u -: ''
+  do. ''
+ elseif. 2&=@(3!:0)@> u
+  do. < '((3 :' , (quote@> u) , ')'''') apm (' , ((5!:5)<'v') , ')'
+ elseif. do. (v (>u)) app (}.u) apm v
+ end.
+)
 
-NB.dis =: 2 : '(u y) app (v y)'
-NB.con =: 2 : '(u y) apm v'
+dis =: 2 : '(u y) app (v y)'
+con =: 2 : '(u y) apm v'
 
-NB.run =: 2 : 0
-NB. if. u > 1
-NB.  do. 'initval initprom' =. v y
-NB.      runhlp =. (".@(1&{::) , (<: &.>@{:)) [ _2&Z:@-.@*@(2&{::)
-NB.      initval ; ground &.> runhlp F: {. _ ; initprom ; < <: u
-NB. elseif. u = 1 do. {. v y
-NB. elseif. u = 0 do. ''
-NB. elseif. do. _1
-NB. end.
-NB. :
-NB. if. u > 1
-NB.  do. 'initval initprom' =. v y
-NB.      runhlp =. (".@(1&{::) , (<: &.>@{:)) [ _2&Z:@-.@*@(2&{::)
-NB.      (x&{ &.> initval) ; (x&{@ground &.>) runhlp F: {. _ ; initprom ; < <: u
-NB. elseif. u = 1 do. {. v y
-NB. elseif. u = 0 do. ''
-NB. elseif. do. _1
-NB. end.
-NB.)
+ground =: 3 : '(y&get L:0)^:_ y'
 
-NB.4 run peano ini NB.OK
-NB.(0) 4 run fives_and_sixes '' NB.OK
-NB.(0) 4 run peano '' NB.OK
+run =: 2 : 0
+ if. u > 1
+  do. 'initval initprom' =. v y
+      runhlp =. (".@(1&{::) , (<: &.>@{:)) [ _2&Z:@-.@*@(2&{::)
+      initval ; ground &.> runhlp F: {. _ ; initprom ; < <: u
+ elseif. u = 1 do. {. v y
+ elseif. u = 0 do. ''
+ elseif. do. _1
+ end.
+:
+ if. u > 1
+  do. 'initval initprom' =. v y
+      runhlp =. (".@(1&{::) , (<: &.>@{:)) [ _2&Z:@-.@*@(2&{::)
+      (x&{ &.> initval) ; (x&{@ground &.>) runhlp F: {. _ ; initprom ; < <: u
+ elseif. u = 1 do. {. v y
+ elseif. u = 0 do. ''
+ elseif. do. _1
+ end.
+)
 
-NB.(0 15 25 ,. 2 6 10) upro (ini 2}]) &.> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.fails, OK
-NB.here, grounding should fail & yield the variable! An easy workaround: initialize variables in subst to themselves instead of _.
-NB.(0 15 25 ,. 2 6 10) bpro (ini 2}]) &.> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB._. should be '2'
-NB.(0 15 25 ,. 2 6 10) upro (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.OK
-NB.(0 15 25 ,. 2 6 10) bpro (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.OK
-NB.26 27 upro (1 0) (4 5 6 10 ,: 7 8 9 12) equ (26 27) 2&fsh@> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.OK
-NB.26 27 bpro (1 0) (4 5 6 10 ,: 7 8 9 12) equ (26 27) 2&fsh@> (0 0) (i. 26) equ (a. {~ 97 + i. 26) 26 fsh '' NB.OK
+bpro =: 4 : '(>y)&get L:0 x&{ > y'
+upro =: 4 : '((>y)&get L:0)@> x&{ > y'
 
-NB.0 upro 5 run fives_and_sixes ini NB.OK
-NB.1 upro 5 run fives_and_sixes ini NB.OK
-NB.0 bpro 5 run fives_and_sixes ini NB.OK
-NB.1 bpro 5 run fives_and_sixes ini NB.OK
-NB.(0) 5 run fives_and_sixes '' NB.OK
-NB.(1) 5 run fives_and_sixes '' NB.fails, OK
+NB.Performance testing for the paper =============================================
 
-NB.start_jpm_''
-NB.10 cis peano
-NB.showtotal_jpm_''
+peano =: 3 : 0
+ (3 :'''z'' equ (<:#y) y') dis ((3 :'(2-~#y) equ (''s'';<:@#y) y') con (3 : '<''peano ('',((5!:5)<''y''),'')''')@fsh) y
+)
+
+load 'plot'
+plot_ts =: 4 : 0
+ factor =. */\ (1 {:: y) # 2
+ pd 'reset'
+ pd 'type line'
+ pd 'color 0 0 0'
+ pd 'titlefont Calibri 18'
+ pd 'captionfont Calibri 12'
+ pd 'title Peano Number Sequence Generation Time'
+ pd 'xcaption maximal number in sequence [n]'
+ pd 'ycaption execution time (ratio to n = 2)'
+ pd (}. factor) ; */\ (x:2) %~/\ ; ((0{::y)!:2) &.>  <"1 (' run peano fsh ini' ,~ ":)"0 factor
+ pd 'pdf ' , x , ' 400 400'
+)
+NB.'/home/raoul/Desktop/mk_paper/time.pdf' plot_ts (6 ; 5)
+NB.'/home/raoul/Desktop/mk_paper/time.pdf' plot_ts (7 ; 5)
+
+table_perf =: 3 : 0 NB.almost immediate up to y = 5. y = 8 is already >2 mins!
+ factor =. */\ y # 2
+ t =. (x:!.0) ; (6!:2) &.>  <"1 (' run peano fsh ini' ,~ ":)"0 factor
+ ct =. _ , */\ (x:2) %~/\ ; t
+ st =. _ , (x:2) %~/\ ; t
+ s =. (x:!.0) ; (7!:2) &.>  <"1 (' run peano fsh ini' ,~ ":)"0 factor
+ cs =. _ , */\ (x:2) %~/\ ; s
+ ss =. _ , (x:2) %~/\ ; s
+ legend =. 'N';'time [s]';'cumulative time ratio';'step time ratio';'space [bytes]';'cumulative space ratio';'step space ratio'
+ legend , <"0 factor ,. t ,. ct ,. st ,. s ,. cs ,. ss
+)

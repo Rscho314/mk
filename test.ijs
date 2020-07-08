@@ -1,17 +1,17 @@
 load'~Projects/mk/microkanren.ijs'
 
-NB.fives =: 3 : 0
-NB.  ((5.0) equ (<:#y)) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
-NB.)
-NB.sixes =: 3 : 0
-NB. ((6.0) equ (<:#y)) dis (3 : '<''sixes ('' , ((5!:5) <''y'') , '')''') y
-NB.)
+fives =: 3 : 0
+ ((5.0) equ (<:#y)) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
+)
+sixes =: 3 : 0
+ ((6.0) equ (<:#y)) dis (3 : '<''sixes ('' , ((5!:5) <''y'') , '')''') y
+)
 
-NB.fives_and_sixes =: 3 : 'fives dis sixes y'
+fives_and_sixes =: 3 : 'fives dis sixes y'
 
-NB.peano =: 3 : 0
-NB. (3 :'''z'' equ (<:#y) y') dis ((3 :'(2-~#y) equ (''s'';<:@#y) y') con (3 : '<''peano ('',((5!:5)<''y''),'')''')@fsh) y
-NB.)
+peano =: 3 : 0
+ (3 :'''z'' equ (<:#y) y') dis ((3 :'(2-~#y) equ (''s'';<:@#y) y') con (3 : '<''peano ('',((5!:5)<''y''),'')''')@fsh) y
+)
 
 test_var_boxvar =: 3 : 'assert. 0&= var < 2'
 test_var_boxempty =: 3 : 'assert. 0&= var < ini'
@@ -57,28 +57,36 @@ test_uni_walk =: 3 : 'assert. (''a'' ; 2 ; ''a'') -: 0 uni 1 (0 ; 2 ; ''a'')'
 test_uni_subtree =: 3 : 'assert. (0 ; 1 ;<''a'';''b'') -: (0 1) 2 uni (''a'';''b'') (0 ; 1 ; 2)'
 test_uni_subtree_var =: 3 : 'assert. ((1;''b'');1) -: 0 uni (1;''b'') (0 ; 1)'
 
-uni_scope_expect =: 'index error'
-test_uni_scope =: 3 : '0 uni 1 ini'
+uni_scope_error_expect =: 'index error'
+test_uni_scope_error =: 3 : '0 uni 1 ini'
 
 test_fsh_single =: 3 : 'assert. (,<0) -: fsh ini'
 test_fsh_multiple =: 3 : 'assert. (0;1;2) -: fsh^:3 ini'
 
-NB.test_infinite_stream_dfs =: 3 : 'assert. (4 # <<5.)&-: 4 run fives ini'
-NB.test_infinite_stream_interleave =: 3 : 'assert. ((<<5.),(<<6.),(<<5.),<<6.)&-: 4 run fives_and_sixes ini'
+test_infinite_stream_dfs =: 3 : 'assert. (4 # <,<5.) -: 4 run fives fsh ini'
+test_infinite_stream_interleave =: 3 : 'assert. ((<,<5.),(<,<6.),(<,<5.),(<,<6.)) -: 4 run fives_and_sixes fsh ini'
 
-NB.test_con1 =: 3 : 'assert. (, < ''z'' ; ''z'')&-: (''z'' equ 0) con (1 equ 0)@fsh (<_.)'
-NB.test_con2 =: 3 : 'assert. (, < ''z'' ; ''z'')&-: ((0 0) ''z'' equ 0 ]) con ((0 0) 1 equ 0 fsh@]) <_.'
+test_con1 =: 3 : 'assert. (, < ''z'' ; ''z'') -: (''z'' equ 0)@fsh con (1 equ 0)@fsh ini'
+test_con2 =: 3 : 'assert. (, < ''z'' ; ''z'') -: ((0 0) ''z'' equ 0 fsh) con ((0 0) 1 equ 0 fsh) ini'
 
-NB.test_peano =: 3 : '(<<''z''),(<(<''s'';1),<''z''),<(<''s'';1),(<''s'';2),<''z''&-: (5!:5)<''a'' [ a =. 3 run peano ini'
+test_peano =: 3 : '((<,<''z''),(<(<''s'';''z''),<''z''),<(<(<''s''),<''s'';''z''),(<''s'';''z''),<''z'') -: 3 run peano fsh ini'
 
-NB.test_additional_1 =: 3 :'assert. (''a'';''b'';''c'')-:(0 0) (''a'';1;2) uni (0;''b''; 2) (_. ; _. ; ''c'')'
-NB.test_additional_2 =: 3 :'assert. (''a'';''b'';''c'')-:(0 0) (0;1;2) uni (''a'';''b''; 2) (_. ; _. ; ''c'')'
-NB.test_additional_3 =: 3 :'assert. (''a'';''b'';''c'')-:(0 0)(0;1;2) uni (''a'';''b'';''c'') (_. ; _. ; ''c'')'
-NB.test_additional_4 =: 3 :'assert. (''a'';0;''c'')-:(0 0) (0;1;2) uni (''a'';0;''c'') (_. ; _. ; ''c'')'
-NB.test_additional_5 =: 3 :'assert. ''''''a'''';_.;''''c''''''-: (5!:5)<''a''[ a=.(0 0) (0;1;2) uni (''a'';1;''c'') (_. ; _. ; ''c'')'
-NB.test_additional_6 =: 3 :'assert. (''a'';''a'';''c'')-:(0 0) (0;1;2) uni (''a'';''a'';''c'') (_. ; _. ; ''c'')'
-NB.test_additional_7 =: 3 :'assert. (''a'';2;''c'')-:(0 0) (0;1;2) uni (''a'';2;''c'') (_. ; _. ; ''c'')'
-NB.test_additional_8 =: 3 :'assert. (''a'';''b'';''c'';''d'')-:(0 0) (0;1;2) uni (''a'';''b'';''c'') (_. ; _. ; _. ; ''d'')'
-NB.test_additional_9 =: 3 :'assert. _1&= (0 0) (0;1;2) uni (''a'';''b'';''c'') (_. ; _. ; ''d'')'
+test_additional_1 =: 3 :'assert. (''a'';''b'';''c'') -: (0 0) (''a''; 1 ; 2) uni (0 ; ''b'' ; 2) (0 ; 1 ; ''c'')'
+test_additional_2 =: 3 :'assert. (''a'';''b'';''c'') -: (0 0) (0 ; 1 ; 2) uni (''a'' ; ''b'' ; 2) (0 ; 1 ; ''c'')'
+test_additional_3 =: 3 :'assert. (''a'';''b'';''c'') -: (0 0) (0 ; 1 ; 2) uni (''a'';''b'';''c'') (0 ; 1 ; ''c'')'
+test_additional_4 =: 3 :'assert. (''a'' ; ''a'' ; ''c'') -: (0 0) (0 ; 1 ; 2) uni (''a'' ; 0 ; ''c'') (0 ; 1 ; ''c'')'
+test_additional_5 =: 3 :'assert. (''a''; 1 ;''c'') -: (0 0) (0 ; 1 ; 2) uni (''a'' ; 1 ; ''c'') (0 ; 1 ; ''c'')'
+test_additional_6 =: 3 :'assert. (''a'' ; ''a'' ; ''c'')-: (0 0) (0 ; 1 ; 2) uni (''a'' ; ''a'' ; ''c'') (0 ; 1 ; ''c'')'
+test_additional_7 =: 3 :'assert. (''a'' ; ''c'' ; ''c'') -: (0 0) (0 ; 1 ; 2) uni (''a'' ; 2 ; ''c'') (0 ; 1 ; ''c'')'
+test_additional_8 =: 3 :'assert. (''a'' ; ''b'' ; ''c'' ; ''d'') -: (0 0) (0 ; 1 ; 2) uni (''a'' ; ''b'' ; ''c'') (0 ; 1 ; 2 ; ''d'')'
+test_additional_9 =: 3 :'assert. _1 -: (0 0) (0 ; 1 ; 2) uni (''a'' ; ''b'' ; ''c'') (0 ; 1 ; ''d'')'
 
-NB.test_rank_polymorphism =: 3 : '(0 2) (i.6) equ (6 4 2 $ a.{~65+i.48) 6#<_.'
+test_rank_polymorphism =: 3 : '(<(4 2$''ABCDEFGH'');(4 2$''IJKLMNOP'');(4 2$''QRSTUVWX'');(4 2$''YZ[\]^_`'');(4 2$''abcdefgh'');4 2$''ijklmnop'') -: (0 2) (i.6) equ (6 4 2 $ a.{~65+i.48) fsh^:6 ini'
+
+test_boxed_projection =: 3 : '(2 2$0;''a'';''a'';''a'') -: (0 1 ,. 1 2) bpro ''a'' equ 2  > 1 equ 2 fsh^:3 ini'
+test_unboxed_projection =: 3 : '(2 2 $ 4 # <''a'') -: (0 1 ,. 1 2) upro ''a'' equ 2  > 1 equ 2 > 0 equ 1 fsh^:3 ini'
+
+projection_domain_error_expect =: 'domain error'
+test_projection_domain_error =: 3 : '(0 1 ,. 1 2) upro ''a'' equ 2  > 1 equ 2 fsh^:3 ini'
+
+test_run_projection =: 3 : '((<,<''z''),(<<''s'';''z''),<<(<''s''),<''s'';''z'') -: (0) 3 run peano fsh ini'
