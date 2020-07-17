@@ -9,6 +9,10 @@ sixes =: 3 : 0
 
 fives_and_sixes =: 3 : 'fives dis sixes y'
 
+letters =: 3 : 0
+ ((2 3 $ a. {~ 65 + i. 6) equ (<:#y)) dis (3 : '<''letters ('' , ((5!:5) <''y'') , '')''') y
+)
+
 peano =: 3 : 0
  (3 :'''z'' equ (<:#y) y') dis ((3 :'(2-~#y) equ (''s'';<:@#y) y') con (3 : '<''peano ('',((5!:5)<''y''),'')''')@fsh) y
 )
