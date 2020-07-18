@@ -51,11 +51,12 @@ equ =: 2 : 0
 )
 
 fsh =: ,<@#
+prom =: 2&=@(3!:0)@>
 
 app =: 4 : 0
  if. x -: ''
   do. y
- elseif. 2&=@(3!:0)@> x
+ elseif. prom x
   do. < '(' , ((5!:5)<'y') , ') app ((3 :' , (quote 0 {:: x) , ')'''')'
  elseif. do. ({. , (y app~ }.)) x
  end.
@@ -64,7 +65,7 @@ app =: 4 : 0
 apm =: 2 : 0
  if. u -: ''
   do. ''
- elseif. 2&=@(3!:0)@> u
+ elseif. prom u
   do. < '((3 :' , (quote@> u) , ')'''') apm (' , ((5!:5)<'v') , ')'
  elseif. do. (v (>u)) app (}.u) apm v
  end.
@@ -77,9 +78,8 @@ ground =: 3 : '(y&get L:0)^:_ y'
 run =: 2 : 0
  a: u run v y
 :
- x&{@ground &.> }:@((}: , ".@(_1&{::))^:(u >: #) ^:_)@(v@fsh) ^: (u>#) y
+ (x&{@ground &.>@}:@((}: , ".@(_1&{::))^:((u&>:*.1&<)@#)^:_ )@v@fsh) ^: (u > #) y
 )
 
 bpro =: 4 : '(>y)&get L:0 x&{ > y'
 upro =: 4 : '((>y)&get L:0)@> x&{ > y'
-ini =: ''

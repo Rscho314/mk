@@ -1,5 +1,7 @@
 load'~Projects/mk/microkanren.ijs'
 
+ini =: ''
+
 fives =: 3 : 0
  ((5.0) equ (<:#y)) dis (3 : '<''fives ('' , ((5!:5) <''y'') , '')''') y
 )
@@ -88,9 +90,13 @@ test_additional_9 =: 3 :'assert. _1 -: (0 0) (0 ; 1 ; 2) uni (''a'' ; ''b'' ; ''
 test_rank_polymorphism =: 3 : 'assert. (<(4 2$''ABCDEFGH'');(4 2$''IJKLMNOP'');(4 2$''QRSTUVWX'');(4 2$''YZ[\]^_`'');(4 2$''abcdefgh'');4 2$''ijklmnop'') -: (0 2) (i.6) equ (6 4 2 $ a.{~65+i.48) fsh^:6 ini'
 
 test_boxed_projection =: 3 : 'assert. (2 2$0;''a'';''a'';''a'') -: (0 1 ,. 1 2) bpro ''a'' equ 2  > 1 equ 2 fsh^:3 ini'
-test_unboxed_projection =: 3 : 'assert. (2 2 $ 4 # <''a'') -: (0 1 ,. 1 2) upro ''a'' equ 2  > 1 equ 2 > 0 equ 1 fsh^:3 ini'
+test_unboxed_projection =: 3 : 'assert. (2 2 $ ''a'') -: (0 1 ,. 1 2) upro ''a'' equ 2  > 1 equ 2 > 0 equ 1 fsh^:3 ini'
 
 projection_domain_error_expect =: 'domain error'
 test_projection_domain_error =: 3 : '(0 1 ,. 1 2) upro ''a'' equ 2  > 1 equ 2 fsh^:3 ini'
 
+test_run_zero =: 3 : 'assert. '''' -: 0 run peano '''' '
+test_run_one =: 3 : 'assert. (,<,<''z'')-: 1 run peano '''' '
+test_run_more =: 3 : 'assert. ((<,<''z''),<(<''s'';''z''),<''z'') -: 2 run peano '''' '
+test_run_nonrecursive =: 3 : 'assert. (<,<''a'') -: 2 run (''a'' equ 0) '''' '
 test_run_projection =: 3 : 'assert. ((<<''z''),(<<''s'';''z''),<<(<''s''),<''s'';''z'') -: (0) 3 run peano ini'
