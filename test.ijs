@@ -67,13 +67,13 @@ test_uni_scope_error =: 3 : '0 uni 1 ini'
 test_fsh_single =: 3 : 'assert. (,<0) -: fsh ini'
 test_fsh_multiple =: 3 : 'assert. (0;1;2) -: fsh^:3 ini'
 
-test_infinite_stream_dfs =: 3 : 'assert. (4 # <,<5.) -: 4 run fives fsh ini'
-test_infinite_stream_interleave =: 3 : 'assert. ((<,<5.),(<,<6.),(<,<5.),(<,<6.)) -: 4 run fives_and_sixes fsh ini'
+test_infinite_stream_dfs =: 3 : 'assert. (4 # <,<5.) -: 4 run fives ini'
+test_infinite_stream_interleave =: 3 : 'assert. ((<,<5.),(<,<6.),(<,<5.),(<,<6.)) -: 4 run fives_and_sixes ini'
 
 test_con1 =: 3 : 'assert. (, < ''z'' ; ''z'') -: (''z'' equ 0)@fsh con (1 equ 0)@fsh ini'
 test_con2 =: 3 : 'assert. (, < ''z'' ; ''z'') -: ((0 0) ''z'' equ 0 fsh) con ((0 0) 1 equ 0 fsh) ini'
 
-test_peano =: 3 : '((<,<''z''),(<(<''s'';''z''),<''z''),<(<(<''s''),<''s'';''z''),(<''s'';''z''),<''z'') -: 3 run peano fsh ini'
+test_peano =: 3 : 'assert. ((<,<''z''),(<(<''s'';''z''),<''z''),<(<(<''s''),<''s'';''z''),(<''s'';''z''),<''z'') -: 3 run peano ini'
 
 test_additional_1 =: 3 :'assert. (''a'';''b'';''c'') -: (0 0) (''a''; 1 ; 2) uni (0 ; ''b'' ; 2) (0 ; 1 ; ''c'')'
 test_additional_2 =: 3 :'assert. (''a'';''b'';''c'') -: (0 0) (0 ; 1 ; 2) uni (''a'' ; ''b'' ; 2) (0 ; 1 ; ''c'')'
@@ -85,12 +85,12 @@ test_additional_7 =: 3 :'assert. (''a'' ; ''c'' ; ''c'') -: (0 0) (0 ; 1 ; 2) un
 test_additional_8 =: 3 :'assert. (''a'' ; ''b'' ; ''c'' ; ''d'') -: (0 0) (0 ; 1 ; 2) uni (''a'' ; ''b'' ; ''c'') (0 ; 1 ; 2 ; ''d'')'
 test_additional_9 =: 3 :'assert. _1 -: (0 0) (0 ; 1 ; 2) uni (''a'' ; ''b'' ; ''c'') (0 ; 1 ; ''d'')'
 
-test_rank_polymorphism =: 3 : '(<(4 2$''ABCDEFGH'');(4 2$''IJKLMNOP'');(4 2$''QRSTUVWX'');(4 2$''YZ[\]^_`'');(4 2$''abcdefgh'');4 2$''ijklmnop'') -: (0 2) (i.6) equ (6 4 2 $ a.{~65+i.48) fsh^:6 ini'
+test_rank_polymorphism =: 3 : 'assert. (<(4 2$''ABCDEFGH'');(4 2$''IJKLMNOP'');(4 2$''QRSTUVWX'');(4 2$''YZ[\]^_`'');(4 2$''abcdefgh'');4 2$''ijklmnop'') -: (0 2) (i.6) equ (6 4 2 $ a.{~65+i.48) fsh^:6 ini'
 
-test_boxed_projection =: 3 : '(2 2$0;''a'';''a'';''a'') -: (0 1 ,. 1 2) bpro ''a'' equ 2  > 1 equ 2 fsh^:3 ini'
-test_unboxed_projection =: 3 : '(2 2 $ 4 # <''a'') -: (0 1 ,. 1 2) upro ''a'' equ 2  > 1 equ 2 > 0 equ 1 fsh^:3 ini'
+test_boxed_projection =: 3 : 'assert. (2 2$0;''a'';''a'';''a'') -: (0 1 ,. 1 2) bpro ''a'' equ 2  > 1 equ 2 fsh^:3 ini'
+test_unboxed_projection =: 3 : 'assert. (2 2 $ 4 # <''a'') -: (0 1 ,. 1 2) upro ''a'' equ 2  > 1 equ 2 > 0 equ 1 fsh^:3 ini'
 
 projection_domain_error_expect =: 'domain error'
 test_projection_domain_error =: 3 : '(0 1 ,. 1 2) upro ''a'' equ 2  > 1 equ 2 fsh^:3 ini'
 
-test_run_projection =: 3 : '((<,<''z''),(<<''s'';''z''),<<(<''s''),<''s'';''z'') -: (0) 3 run peano fsh ini'
+test_run_projection =: 3 : 'assert. ((<<''z''),(<<''s'';''z''),<<(<''s''),<''s'';''z'') -: (0) 3 run peano ini'
