@@ -44,6 +44,25 @@ uni =: 2 : 0
  y ext {::&tree L:1 varpaths ,. substpaths
 )
 
+NB. EQUIVALENCE CLASSES
+uni =: 2 : 0
+ (_ _) u uni v y
+:
+ if. (#u) ~: #v do. _1 return. end.
+ tree =. (,<"({.x) u) ;< ,<"({:x) v
+ paths =. (<S:1)@{:: tree
+ eqcl =. paths (</.)~ ((-:@# |. ]) >. ]) (-@>:@i.@#paths) >. (-@_:^:(-.@var)) S:0 tree
+ (/:~)@~. &.> ({::&tree) L:1 eqcl NB.eq class root => first, value => last
+ NB.vars =. (>:@i.@# paths) * var S:0 tree NB.distinct value to each var occurence
+ NB.subs =. (-:@# |. ]) vars NB.now vars & subst have same marker
+ NB.(vars <. subs) ]/. paths NB.use /. to group
+ NB.(vars <. subs) NB.this is the problem to solve to make equivalence classes
+)
+(1 0) (3 2 $ a.{~65+i.6) uni (i.3) fsh^:3 ''
+(0;<1;2) uni ('a';<'b';'c') fsh^:3 ''
+(0;<1;'c';'d') uni ('a';<'b';'c';'d') fsh^:2 ''
+(0;<'a';2) uni (1;<1;'c') fsh^:3 '' NB.needs further processing
+
 equ =: 2 : 0
  (_ _) u equ v y
 :
@@ -78,7 +97,7 @@ ground =: 3 : '(y&get L:0)^:_ y'
 run =: 2 : 0
  a: u run v y
 :
- (x&{@ground &.>@}:@((}: , ".@(_1&{::))^:((u&>:*.1&<)@#)^:_ )@v@fsh) ^: (u > #) y
+ x&{@ground &.> ((]`(}:@((}: , ".@(_1&{::))^:(u >:#)^:_))@. (prom@{:))@v@fsh) ^: (u > #) y
 )
 
 bpro =: 4 : '(>y)&get L:0 x&{ > y'
