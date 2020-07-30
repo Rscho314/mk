@@ -62,24 +62,17 @@ NB.path partitioning
  resp =. varp -.~ (#~ -.@;@:(+./@,@(subp&=@<\) &.>))~ paths
 NB.residual paths check (empty or symmetric)
  if. +./@:~:/@($~ 2&,@-:@#)~ {::&tree &.> resp do. _1 return. end.
-NB.unification proper
- y&get^:var L: 0 (#~ ~:/"1)~ ~. /:~"1 {::&tree &.> varp ,. subp NB.instead of y&get, append y?
- NB.eqcl =. paths (</.)~ (>.~ (|.~ -:@#)~)~ (-@>:@i.@#paths) >. (-@_:^:(-.@var)) S:0 tree
- NB.eqcl =. y&get L:_2 {::&tree L:1 eqcl
- NB.eqcl =. (/:~)@~. &.> y&get L:_2 {::&tree L:1 eqcl
- NB.here, check if there exists a variable appearing in > 1 eqcl? How to handle this?? Fuse eqcls?
- NB.if. (# < +/@(-.@var S:_2)) eqcl do. _1 return. end.
- NB.eqcl =. (#~ (1&<@# S:_1))~ eqcl
- NB.if. +./ ; (}. occ"(0 1) {:) &.> eqcl do. _1 return. end.
-
-NB.check if compat w existing subst
-NB.check at most 1 unique value for each eqcl
-NB.filter eqcls containing no variable & only a single var (= all of length 1!)
-NB.sort eqcls class root => first, value => last
-NB.occurs check
-NB.extend
-NB.CAREFUL about unwanted grounding of value in eqcl!
+NB.unification proper (better to start by appending to y to avoid get??)
+ eqclc =. ((</.)~ (>.~ (|.~ -:@#)~)~@(-@>:@i.@# >. ;@:((-@_:^:(-.@var))@({::&tree) &.>)))~ varp,subp
+ eqclc =. (#~ 1&<@#@>)~ ~. &.> (<"1@(,.~ <"0@i.@#)~ y) , {::&tree L:1 eqclc NB.no get! Now fuse on var
+ eqclcvars =. (#~ var@>)~ &.> eqclc
+ eqcl =. (-.@>&1@(+/) # <@I.) (+: >/~@i.@~.@$)~ ;"1 *./@~: &.> (<@;@,"0/~) eqclcvars
+ /:~@~.@;@:{&eqclc &.> eqcl
+ NB.check no more than 1 value per equivalence class!
+ NB.replace all vars not at the top level by their equivalence class, then occurs check?
 )
+(0 0)(0;'a';2;'b';3;5;'';6;7;(< 'a'; 3)) uni (1;1;'c';'b';4;5;'';'';'a';8) (<2) 3} fsh^:9 ''
+
 (1 0) (3 2 $ a.{~65+i.6) uni (i.3) fsh^:3 ''
 (0 0)(0;<1;2) uni ('a';<'b';'c') fsh^:3 ''
 (_ _)(0;<1;2) uni ('a';<'b';'c') fsh^:3 ''
