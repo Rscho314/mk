@@ -1,4 +1,4 @@
-load'~Projects/mk/microkanren.ijs'
+load'~Projects/mk/microkanren-simple.ijs'
 
 ini =: ''
 
@@ -59,7 +59,7 @@ test_uni_occ =: 3 : 'assert. _1 -: 2 uni (<2) (0 ; 1 ; 2)'
 test_uni_occ_walk =: 3 : 'assert. _1 -: 0 uni (<1) (0 ; 0)'
 test_uni_crisscross =: 3 : 'assert. (''b'' ; ''a'') -: (''a'' ; 0) uni (1 ; ''b'') (0 ; 1)'
 test_uni_nested =: 3 : 'assert. (''d'' ; ''c'') -: (''a'' ; < < (''c'' ; 0)) uni (''a'' ; < < (1 ; ''d'')) (0 ; 1)'
-test_uni_walk =: 3 : 'assert. (''a'' ; 2 ; ''a'') -: 0 uni 1 (0 ; 2 ; ''a'')'
+test_uni_walk =: 3 : 'assert. (1 ; 2 ; ''a'') -: 0 uni 1 (0 ; 2 ; ''a'')'
 test_uni_subtree =: 3 : 'assert. (0 ; 1 ;<''a'';''b'') -: (0 1) 2 uni (''a'';''b'') (0 ; 1 ; 2)'
 test_uni_subtree_var =: 3 : 'assert. ((1;''b'');1) -: 0 uni (1;''b'') (0 ; 1)'
 

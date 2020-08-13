@@ -1,5 +1,6 @@
 0 : 0
 Arithmetic - using '0' & '1' should be possible since vars cannot be vectors!
+Language   - dynamic scope with shallow binding
 )
 
 var =: -.@#@$*.e.&4 1@(3!:0)
@@ -54,21 +55,25 @@ uni =: 2 : 0
  tree =. (,<"({.x) u) ;< ,<"({:x) v
  if. ~:/ # &.> tree do. _1 return. end.
  paths =. (< S: 1)@{:: tree
-NB.path partitioning
  varc =. paths #~ var S: 0 tree
  subc =. ((-. &.>@{.) 0} ]) &.> varc
  sube =. e.&(;@:(<\ &.>) paths) subc
  'varp subp' =. sube&# &.> varc ;< subc
  resp =. varp -.~ (#~ -.@;@:(+./@,@(subp&=@<\) &.>))~ paths
-NB.residual paths check (empty or symmetric)
- if. +./@:~:/@($~ 2&,@-:@#)~ {::&tree &.> resp do. _1 return. end.
-NB.unification proper (better to start by appending to y to avoid get??)
- eqclc =. ((</.)~ (>.~ (|.~ -:@#)~)~@(-@>:@i.@# >. ;@:((-@_:^:(-.@var))@({::&tree) &.>)))~ varp,subp
- eqclc =. (#~ 1&<@#@>)~ ~. &.> (<"1@(,.~ <"0@i.@#)~ y) , {::&tree L:1 eqclc NB.no get! Now fuse on var
- eqclcvars =. (#~ var@>)~ &.> eqclc
- eqcl =. (-.@>&1@(+/) # <@I.) (+: >/~@i.@~.@$)~ ;"1 *./@~: &.> (<@;@,"0/~) eqclcvars
- /:~@~.@;@:{&eqclc &.> eqcl
- NB.check no more than 1 value per equivalence class!
+ if. +./@:~:/@($~ 2&,@-:@#)~ {::&tree &.> resp do. _1 return. end. NB.resp empty or symmetric
+NB.unification proper
+ ~. <@/:~"1@:(#~ ~:/"1)~ {::&tree &.> varp ,. subp NB. yields a "3D tree"
+ ~. /:~@;"1@:(#~ (var@(1&{::) *. ~:/)"1)~ {::&tree &.> varp ,. subp NB.top vars eqcl
+NB. stratified processing by boxing level (=BFS)?
+NB. 1) eqcl level n 2) replace by eqcl in level n+1 3) occurs check n vs n+1 4) recur...
+
+ NB.eqclc =. ((</.)~ (>.~ (|.~ -:@#)~)~@(-@>:@i.@# >. ;@:((-@_:^:(-.@var))@({::&tree) &.>)))~ varp,subp
+ NB.eqclc =. (#~ 1&<@#@>)~ ~. &.> (<"1@(,.~ <"0@i.@#)~ y) , {::&tree L:1 eqclc NB.no get! Now fuse on var
+ NB.eqclcvars =. (#~ var@>)~ &.> eqclc
+ NB.eqcl =. (-.@>&1@(+/) # <@I.) (+: >/~@i.@~.@$)~ ;"1 *./@~: &.> (<@;@,"0/~) eqclcvars
+ NB.eqcl =. /:~@~.@;@:{&eqclc &.> eqcl
+ NB.if. -. *./ <&2@+/@:(-.@var@>)@> eqcl do. _1 return. end. NB.<:1 value per equivalence class!
+ NB.((var S:0) # (< S:0))@(#~ >&1@L."0)~ &.> eqcl
  NB.replace all vars not at the top level by their equivalence class, then occurs check?
 )
 (0 0)(0;'a';2;'b';3;5;'';6;7;(< 'a'; 3)) uni (1;1;'c';'b';4;5;'';'';'a';8) (<2) 3} fsh^:9 ''

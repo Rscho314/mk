@@ -4,4 +4,4 @@ NB. defines list of source files.
 NB. path defaults to project directory.
 
 init.ijs
-microkanren.ijs
+microkanren-simple.ijs
